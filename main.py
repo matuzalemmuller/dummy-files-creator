@@ -90,7 +90,7 @@ size_label = Label(window, text="Size of Files", font=("Arial", 12),
 size_label.grid(column=0, row=2)
 
 size_entry = integer_entry.integerEntry(window, width=30)
-size_entry.grid(column=1, row=2)
+size_entry.grid(column=1, row=2, padx=20)
 
 size_frame = Frame(window)
 size_frame.grid(column=2, row=2)
