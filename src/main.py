@@ -90,7 +90,9 @@ def close_clicked():
 
 def cancel_clicked(Files):
     result = messagebox.askyesno(title="Confirmation",
-                                 message="Are you sure?")
+                                 message="Are you sure?\nThe current file " + \
+                                         "will still be created before " + \
+                                         "the process is cancelled.")
     if result == True:
         Files.stop()
 
