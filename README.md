@@ -6,7 +6,7 @@
 
 Desktop application to generate test files. Using this program you can easily create a batch of files with a specific size to be used for testing.
 
-![](https://i.imgur.com/laiuspn.png)
+![](https://i.imgur.com/etxAsS9.png)
 
 This program has been written in Python 3.7 and packaged as an application using [pyinstaller](https://www.pyinstaller.org/).
 
