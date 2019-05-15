@@ -1,6 +1,18 @@
+# masOS
 .DS_Store
+
+# Python
 __pycache__
+
+# virtualenv
 env
+
+# Pyinstaller
 build
 dist
+
+# Local file
 notes.txt
+
+# VSCode
+settings.json

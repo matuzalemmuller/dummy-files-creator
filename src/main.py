@@ -53,7 +53,7 @@ def progress_bar(Files):
         progress_text.set(str(Files.created_files)+"/"+files_entry.get())
         progress_bar.config(value=Files.created_files)
         progress_bar.update()
-        messagebox.showinfo("Success!", "Files created!")
+        messagebox.showinfo("Success!", "File(s) created!")
 
     progress_frame.destroy()
 
@@ -63,11 +63,11 @@ def about_clicked():
     t = Toplevel()
     t.wm_title("About")
     t.resizable(False, False)
-    tfg_label = Label(t, text="2019 Test File Generator", font=("Arial", 12), 
+    tfg_label = Label(t, text="2019 Test File Generator", font=("Arial", 10), 
                       padx=20, pady=3)
-    author_label = Label(t, text="by Mat Muller", font=("Arial", 12),
+    author_label = Label(t, text="by Mat Muller", font=("Arial", 10),
                          padx=20, pady=3)
-    version_label = Label(t, text="v1.0.0", font=("Arial", 12), padx=20, pady=3)
+    version_label = Label(t, text="v1.0.0", font=("Arial", 10), padx=20, pady=3)
     link = Label(t, text="https://git.io/fjWdz", fg="blue", cursor="hand2")
     link.bind("<Button-1>", lambda event: webbrowser.open(link.cget("text")))
     tfg_label.pack()
@@ -122,7 +122,7 @@ window.title("Test Files Generator")
 window.resizable(False, False)
 
 menu = Menu(window) 
-new_item = Menu(menu)
+new_item = Menu(menu, tearoff=False)
 new_item.add_command(label='About', command=about_clicked)
 menu.add_cascade(label='Help', menu=new_item)
 window.config(menu=menu)
@@ -132,8 +132,7 @@ options_frame.grid(row=0)
 
 #-------------------------------- Path ----------------------------------------#
 
-path_label = Label(options_frame, text="Path", font=("Arial", 12), padx=20,
-                   pady=10)
+path_label = Label(options_frame, text="Path", padx=20, pady=10)
 path_entry = Entry(options_frame, width=30)
 browse_btn = Button(options_frame, text="Browse", command=browse_clicked,
                     padx=10)
@@ -144,8 +143,7 @@ browse_btn.grid(column=2, row=0)
 
 #-------------------------- Number of files -----------------------------------#
 
-files_label = Label(options_frame, text="Number of Files", font=("Arial", 12),
-                    padx=20, pady=10)
+files_label = Label(options_frame, text="Number of Files", padx=20, pady=10)
 files_label.grid(column=0, row=1)
 
 files_entry = integer_entry.integerEntry(options_frame, width=30)
@@ -153,8 +151,7 @@ files_entry.grid(column=1, row=1)
 
 #---------------------------- Size of files -----------------------------------#
 
-size_label = Label(options_frame, text="Size of Files", font=("Arial", 12),
-                   padx=20, pady=10)
+size_label = Label(options_frame, text="Size of File(s)", padx=20, pady=10)
 size_entry = integer_entry.integerEntry(options_frame, width=30)
 size_frame = Frame(options_frame)
 
