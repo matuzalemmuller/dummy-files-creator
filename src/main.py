@@ -63,11 +63,9 @@ def about_clicked():
     t = Toplevel()
     t.wm_title("About")
     t.resizable(False, False)
-    tfg_label = Label(t, text="2019 Test File Generator", font=("Arial", 10), 
-                      padx=20, pady=3)
-    author_label = Label(t, text="by Mat Muller", font=("Arial", 10),
-                         padx=20, pady=3)
-    version_label = Label(t, text="v1.0.0", font=("Arial", 10), padx=20, pady=3)
+    tfg_label = Label(t, text="2019 Test File Generator", padx=20, pady=3)
+    author_label = Label(t, text="by Mat Muller", padx=20, pady=3)
+    version_label = Label(t, text="v1.0.0", padx=20, pady=3)
     link = Label(t, text="https://git.io/fjWdz", fg="blue", cursor="hand2")
     link.bind("<Button-1>", lambda event: webbrowser.open(link.cget("text")))
     tfg_label.pack()
