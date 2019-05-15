@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['src\\main.py'],
+a = Analysis(['src\\tfg.py'],
              pathex=['src'],
              binaries=[],
              datas=[],
