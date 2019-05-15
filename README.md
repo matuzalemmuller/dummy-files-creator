@@ -12,6 +12,7 @@ This program has been written in Python 3.7 and packaged as an application using
 
 ## Installation
 
+* Download and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/) 
 * See the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page to download the program for your Linux, macOS or Windows computer.
 
 ## Contributing
