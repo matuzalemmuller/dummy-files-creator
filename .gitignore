@@ -7,14 +7,9 @@ __pycache__
 # virtualenv
 env
 
-# Pyinstaller
+# Pyinstaller generated directories
 build
 dist
-
-# Temporary local files to help development
-notes.txt
-packages
-packages 2
 
 # VSCode
 settings.json

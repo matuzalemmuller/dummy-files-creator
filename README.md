@@ -8,18 +8,37 @@ Desktop application to generate test files. Using this program you can easily cr
 
 * Windows
 
-<img src="https://i.imgur.com/mxU1hLu.png" width="517" height="207" />
+<img src="https://i.imgur.com/vvDuYJM.png" width="517" height="207" />
 
 * macOS
 
-<img src="https://i.imgur.com/etxAsS9.png" width="639" height="185" />
+<img src="https://i.imgur.com/m5iS95t.png" width="639" height="185" />
+
+* Linux
+
+<img src="https://i.imgur.com/YuCPGM5.png" width="632" height="221" />
 
 This program has been written in Python 3.7 and packaged as an application using [pyinstaller](https://www.pyinstaller.org/).
 
 ## Installation
 
-* (masOS only) Download and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/) 
-* See the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page to download the program for your Linux, macOS or Windows computer.
+* Windows:
+
+  * Download and run the program from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page.
+
+* Linux:
+
+  * Download the tar package from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page and run the file `test-files-generator-x86_64`.
+
+* masOS:
+
+  * Dowload and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/).
+  * Download the `.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract the image and run the file `Test Files Generator.app`.
+    * Alternatively, you can download the tar package `test-files-generator-darwin.tar.gz` and run the file `test-files-generator-darwin`.
+
+## Manually running and building the app
+
+See the instructions to manually [run the app](src/README.md) and to [generate the packages for each OS](spec/README.md).
 
 ## Contributing
 
