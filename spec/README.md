@@ -12,7 +12,7 @@ pip3 install pyinstaller
 
 ### Windows
 
-Having Python 3 and PyInstaller installed, you can create the `.exe` package:
+Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller installed, you can create the `.exe` package:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spec
@@ -20,7 +20,7 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spe
 
 ### Linux
 
-Having Python 3 and PyInstaller installed, you can create the portable version of the app:
+Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
@@ -29,13 +29,13 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
 
 ### masOS
 
-Having Python 3 and PyInstaller installed, you can create the portable version of the app:
+Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_macos.spec
 ```
 
-After creating the `.pkg` file and the folder with all the libraries, it may be necessary to import the `tk` framework inside the app. This happens because PyInstaller may fail importing the `tk` libraries, so that must be done manually. The steps on how to import the framework are outlined below:
+After creating the `.pkg` file and the folder with all the libraries, it may be necessary to import the `tk` and `tcl` frameworks inside the app. This happens because PyInstaller may fail importing the libraries, so that must be done manually. The steps on how to import the frameworks are outlined below:
 
 * Create folders inside the `Test Files Generator.app` package and the `test-files-generator-darwin` folder for `tk` and `tcl`:
 
