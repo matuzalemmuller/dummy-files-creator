@@ -24,7 +24,7 @@ This program has been written in Python 3.7 and packaged as an application using
 
 * Windows:
 
-  * Download and run the program from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page.
+  * Download and run the program `Test_Files_Generator.exe` from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page.
 
 * Linux:
 
@@ -33,8 +33,8 @@ This program has been written in Python 3.7 and packaged as an application using
 * masOS:
 
   * Dowload and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/).
-  * Download the `.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract the image and run the file `Test Files Generator.app`.
-    * Alternatively, you can download the tar package `test-files-generator-darwin.tar.gz` and run the application `test-files-generator-darwin`.
+  * Download the `Test_Files_Generator.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract the image and run the application `Test Files Generator.app`.
+    * Alternatively, you can download the tar package `test-files-generator-darwin.tar.gz` and run the executable `test-files-generator-darwin`.
 
 ## Manually running and building the app
 
