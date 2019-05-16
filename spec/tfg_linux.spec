@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['src/tfg.py'],
-             pathex=['src'],
+a = Analysis(['../src/tfg.py'],
+             pathex=['../src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,7 +18,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='test-files-generator',
+          name='test-files-generator-x86_64',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -30,4 +30,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='test-files-generator')
+               name='test-files-generator-x86_64')

@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['src/tfg.py'],
-             pathex=['src'],
+a = Analysis(['../src/tfg.py'],
+             pathex=['../src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,22 +18,22 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='Test Files Generator',
+          name='test-files-generator-darwin',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=True )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
                upx=True,
-               name='Test Files Generator')
+               name='test-files-generator-darwin')
 app = BUNDLE(coll,
              name='Test Files Generator.app',
-             icon='icon/icon.icns',
+             icon='../icon/icon.icns',
              info_plist={
                 'LSUIElement': '1',
                 'NSHighResolutionCapable': 'True',

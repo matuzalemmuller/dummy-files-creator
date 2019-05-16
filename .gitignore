@@ -11,9 +11,10 @@ env
 build
 dist
 
-# Local file
+# Temporary local files to help development
 notes.txt
 packages
+packages 2
 
 # VSCode
 settings.json

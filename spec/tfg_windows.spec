@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['src\\tfg.py'],
-             pathex=['src'],
+a = Analysis(['..\\src\\tfg.py'],
+             pathex=['..\\src'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -27,4 +27,4 @@ exe = EXE(pyz,
           upx=True,
           runtime_tmpdir=None,
           console=False,
-          icon='icon\icon.ico')
+          icon='..icon\\icon.ico')
