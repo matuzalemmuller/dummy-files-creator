@@ -1,3 +1,5 @@
+import os
+import sys
 import webbrowser
 import integer_entry
 import files_creator
@@ -115,7 +117,15 @@ def browse_clicked():
 
 window = Tk()
 window.title("Test Files Generator")
-icon = PhotoImage(file="../icon/icon.png")
+
+if hasattr(sys, '_MEIPASS'):
+    try:
+        base_path = os.path.join(sys._MEIPASS, 'icon')
+        icon = PhotoImage(file=os.path.join(base_path, "icon.png"))
+    except Exception as e:
+        print(e)    
+else:
+    icon = PhotoImage(file="../icon/icon.png")
 window.resizable(False, False)
 window.call('wm', 'iconphoto', window._w, icon)
 

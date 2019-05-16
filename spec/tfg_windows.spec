@@ -1,9 +1,11 @@
 # -*- mode: python -*-
 block_cipher = None
 a = Analysis(['..\\src\\tfg.py'],
-             pathex=['..\\src'],
+             pathex=['src'],
              binaries=[],
-             datas=[],
+             datas=[
+                    ('..\\icon\\icon.png','icon')
+                   ],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
