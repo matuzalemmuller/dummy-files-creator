@@ -9,6 +9,7 @@ from tkinter import IntVar
 from tkinter import Label
 from tkinter import Menu
 from tkinter import messagebox
+from tkinter import PhotoImage
 from tkinter import StringVar
 from tkinter import Tk
 from tkinter import Toplevel
@@ -37,10 +38,7 @@ def progress_bar(Files):
 
     while Files.created_files < int(files_entry.get()):
         if Files.errorFlag == 1:
-            messagebox.showinfo("Error", "An error ocurred:" + \
-                                str(Files.error) + \
-                                "\nCheck if you have enough space and " + \
-                                "permissions to write in the destination")
+            messagebox.showinfo("Error","An error ocurred:\n"+str(Files.error))
             break
         if not Files.is_running():
             progress_frame.destroy()
@@ -117,7 +115,9 @@ def browse_clicked():
 
 window = Tk()
 window.title("Test Files Generator")
+icon = PhotoImage(file="../icon/icon.png")
 window.resizable(False, False)
+window.call('wm', 'iconphoto', window._w, icon)
 
 menu = Menu(window) 
 new_item = Menu(menu, tearoff=False)
