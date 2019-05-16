@@ -30,7 +30,7 @@ This program has been written in Python 3.7 and packaged as an application using
 
   * Download the tar `test-files-generator-x86_64.tar.gz` package from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page and run the file `test-files-generator-x86_64`.
 
-* masOS:
+* macOS:
 
   * Dowload and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/).
   * Download the `Test_Files_Generator.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract the image and run the application `Test Files Generator.app`.
