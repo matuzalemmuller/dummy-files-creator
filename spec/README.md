@@ -12,7 +12,7 @@ pip3 install pyinstaller
 
 ### Windows
 
-Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller installed, you can create the `.exe` package:
+Having Python 3.7.0 (or later) and PyInstaller installed, you can create the `.exe` package:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spec
@@ -20,7 +20,7 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spe
 
 ### Linux
 
-Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
+Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
@@ -29,7 +29,7 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
 
 ### masOS
 
-Having ActiveState Tcl, Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
+Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
 pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_macos.spec
