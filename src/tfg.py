@@ -38,6 +38,7 @@ class MyWindow(QWidget):
         self._create_ui()
 
 
+    # Creates all UI elements
     def _create_ui(self):
         self._window_layout = QGridLayout()
         self._window_layout.setContentsMargins(0,0,0,0)
@@ -144,10 +145,12 @@ class MyWindow(QWidget):
         self.setLayout(self._window_layout)
 
 
+    # Opens About window when Help is choosen in top menu
     def _about_clicked(self):
         About()
 
 
+    # Open native folder dialog to select where test files will be created
     def _browse_clicked(self):
         dialog = QFileDialog()
         path = str(QFileDialog.getExistingDirectory(dialog,
@@ -155,6 +158,7 @@ class MyWindow(QWidget):
         self._path_textbox.setText(path)    
    
 
+    # Action to button Create
     def _create_clicked(self):
         if self._path_textbox.text() == "" or \
         self._number_files_textbox.text() == "" or \
@@ -195,6 +199,7 @@ class MyWindow(QWidget):
             self._change_layout('Running')
 
 
+    # Action to button Close/Quit
     def _close_clicked(self):
         if self._close_button.text() == "Quit":
             msg = QMessageBox()
@@ -210,6 +215,7 @@ class MyWindow(QWidget):
             sys.exit(0)
 
 
+    # Action to button Cancel
     def _cancel_clicked(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
@@ -223,6 +229,7 @@ class MyWindow(QWidget):
             self._change_layout('Stopped')
 
 
+    # Changes layout when app is creating files / idle
     def _change_layout(self, status):
         if status == 'Running':
             disabled_style = "background-color: rgb(210,210,210); border: gray"
@@ -271,6 +278,7 @@ class MyWindow(QWidget):
             self.repaint()
 
 
+    # Method to treat error during file creation
     @pyqtSlot(str)
     def _abort(self, error: str):
         print(error)
@@ -284,6 +292,7 @@ class MyWindow(QWidget):
         self._change_layout('Stopped')
 
 
+    # Method to treat files creation completion
     @pyqtSlot()
     def _done(self):
         self._change_layout('Stopped')
@@ -299,6 +308,7 @@ class MyWindow(QWidget):
         msg.exec_()
 
 
+    # Runs when each file is created to change progress bar UI values
     @pyqtSlot(str, int)
     def _step(self, file_name: str, number_files: int):
         self.progress_label.setText(str(self.Files.created_files) + "/" + \
