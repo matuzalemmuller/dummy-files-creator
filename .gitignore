@@ -13,3 +13,6 @@ dist
 
 # VSCode
 settings.json
+
+# Local releases
+release
