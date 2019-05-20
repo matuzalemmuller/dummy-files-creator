@@ -1,203 +1,328 @@
-import os
 import sys
-import webbrowser
-import integer_entry
-import files_creator
-from tkinter import Button
-from tkinter import Entry
-from tkinter import filedialog
-from tkinter import Frame
-from tkinter import IntVar
-from tkinter import Label
-from tkinter import Menu
-from tkinter import messagebox
-from tkinter import PhotoImage
-from tkinter import StringVar
-from tkinter import Tk
-from tkinter import Toplevel
-from tkinter import INSERT
-from tkinter import END
-from tkinter.ttk import Progressbar
-from tkinter.ttk import Radiobutton
+from about import About
+from files_creator import FilesCreator
+from PyQt5 import QtGui
+from PyQt5 import QtCore
+from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QThread
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QButtonGroup
+from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLayout
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QProgressBar
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QRadioButton
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QMenuBar
 
-#-------------------------------- Progressbar ---------------------------------#
+#------------------------------------------------------------------------------#
 
-def progress_bar(Files):
-    progress_frame = Frame(window)
-    progress_frame.grid(row=1)
+class MyWindow(QWidget):
+    sig_abort_workers = pyqtSignal()
 
-    progress_text = StringVar()
-    progress_text.set("0/"+files_entry.get())
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Test Files Generator")
+        self.setWindowIcon(QtGui.QIcon('../icon/icon.png'))
+        QThread.currentThread().setObjectName('main')
+        self.__threads = []
+        self._files_created = []
+        self._create_ui()
 
-    progress_bar = Progressbar(progress_frame, orient="horizontal", length=500,
-                              mode="determinate")
-    progress_bar.config(value=0, maximum=int(files_entry.get()))
-    progress_label = Label(progress_frame, textvariable=progress_text)
 
-    progress_bar.grid(column=0)
-    progress_label.grid(column=1)
-    progress_bar.grid(column=1,row=3)
+    # Creates all UI elements
+    def _create_ui(self):
+        self._window_layout = QGridLayout()
+        self._window_layout.setContentsMargins(0,0,0,0)
 
-    while Files.created_files < int(files_entry.get()):
-        if Files.errorFlag == 1:
-            messagebox.showinfo("Error","An error ocurred:\n"+str(Files.error))
-            break
-        if not Files.is_running():
-            progress_frame.destroy()
-            return
-        progress_text.set(str(Files.created_files)+"/"+files_entry.get())
-        progress_bar.config(value=Files.created_files)
-        progress_bar.update()
+        self._menu_bar = QMenuBar()
+        self._window_layout.addWidget(self._menu_bar)
+        self._help_item = self._menu_bar.addMenu('Help')
+        self._about_action = QAction("Help", self._menu_bar)
+        self._about_action.triggered.connect(self._about_clicked)
+        self._help_item.addAction(self._about_action)
 
-    if Files.errorFlag == 0:
-        progress_text.set(str(Files.created_files)+"/"+files_entry.get())
-        progress_bar.config(value=Files.created_files)
-        progress_bar.update()
-        messagebox.showinfo("Success!", "File(s) created!")
+        self._options_layout = QGridLayout()
+        self._options_layout.setAlignment(QtCore.Qt.AlignCenter)
+        self._options_widget = QWidget()
+        self._options_widget.setLayout(self._options_layout)
 
-    progress_frame.destroy()
+        self._path_label = QLabel()
+        self._path_label.setText("Path")
+        self._path_label.setAlignment(QtCore.Qt.AlignCenter)
 
-#------------------- Actions when buttons are clicked -------------------------#
+        self._path_textbox = QLineEdit()
+        self._path_textbox.resize(320,20)
+        self._path_textbox.setMinimumWidth(320)
 
-def about_clicked():
-    t = Toplevel()
-    t.wm_title("About")
-    t.resizable(False, False)
-    tfg_label = Label(t, text="2019 Test File Generator", padx=20, pady=3)
-    author_label = Label(t, text="by Mat Muller", padx=20, pady=3)
-    version_label = Label(t, text="v1.0.0", padx=20, pady=3)
-    link = Label(t, text="https://git.io/fjWdz", fg="blue", cursor="hand2")
-    link.bind("<Button-1>", lambda event: webbrowser.open(link.cget("text")))
-    tfg_label.pack()
-    author_label.pack()
-    version_label.pack()
-    link.pack()
+        self._browse_button = QPushButton("Browse")
+        self._browse_button.setFixedWidth(80)
+        self._browse_button.clicked.connect(self._browse_clicked)
 
-def widgets_status(status):
-    path_entry.config(state=status)
-    files_entry.config(state=status)
-    size_entry.config(state=status)
-    create_btn.config(state=status)
-    browse_btn.config(state=status)
-    size_kb_radio.config(state=status)
-    size_mb_radio.config(state=status)
-    size_gb_radio.config(state=status)
+        self._options_layout.addWidget(self._path_label, 1, 1)
+        self._options_layout.addWidget(self._path_textbox, 1, 2)
+        self._options_layout.addWidget(self._browse_button, 1, 3,
+                                      QtCore.Qt.AlignCenter)
 
-def close_clicked():
-    window.destroy()
+        self._number_files_label = QLabel()
+        self._number_files_label.setText("Number of Files")
+        self._number_files_label.setAlignment(QtCore.Qt.AlignCenter)
 
-def cancel_clicked(Files):
-    result = messagebox.askyesno(title="Confirmation",
-                                 message="Are you sure?\nThe current file " + \
-                                         "will still be created before " + \
-                                         "the process is cancelled.")
-    if result == True:
-        Files.stop()
+        self._number_validator=QtCore.QRegExp("[0-9]+")
+        self._validator = QtGui.QRegExpValidator(self._number_validator)
 
-def create_clicked():
-    if path_entry.get() == "" or \
-       files_entry.get() == "" or \
-       size_entry.get() == "":
-        messagebox.showerror("Error", "You must fill all options!")
-    else:
-        Files = files_creator.filesCreator(path_entry.get(), files_entry.get(),
-                                           size_entry.get(), size_unit.get())
-        widgets_status('disabled')
-        close_btn.config(text="Cancel", command=lambda: cancel_clicked(Files))
-        progress_bar(Files)
-        widgets_status('normal')
-        close_btn.config(text="Close", command=close_clicked)
+        self._number_files_textbox = QLineEdit()
+        self._number_files_textbox.resize(320,20)
+        self._number_files_textbox.setMinimumWidth(320)
+        self._number_files_textbox.setValidator(self._validator)
 
-def browse_clicked():
-    folder_path = filedialog.askdirectory()
-    path_entry.delete(0, END)
-    path_entry.insert(0, str(folder_path))
+        self._options_layout.addWidget(self._number_files_label, 2, 1)
+        self._options_layout.addWidget(self._number_files_textbox, 2, 2)
 
-#------------------------ Window and Help menu --------------------------------#
+        self._size_files_label = QLabel()
+        self._size_files_label.setText("Size of File(s)")
+        self._size_files_label.setAlignment(QtCore.Qt.AlignCenter)
 
-window = Tk()
-window.title("Test Files Generator")
+        self._size_files_textbox = QLineEdit()
+        self._size_files_textbox.resize(320,20)
+        self._size_files_textbox.setMinimumWidth(320)
+        self._size_files_textbox.setValidator(self._validator)
 
-if hasattr(sys, '_MEIPASS'):
-    try:
-        base_path = os.path.join(sys._MEIPASS, 'icon')
-        icon = PhotoImage(file=os.path.join(base_path, "icon.png"))
-    except Exception as e:
-        print(e)    
-else:
-    icon = PhotoImage(file="../icon/icon.png")
-window.resizable(False, False)
-window.call('wm', 'iconphoto', window._w, icon)
+        self._radio_button_layout = QHBoxLayout()
+        self._radio_button_layout.setSpacing(5)
+        self._radio_widget = QWidget() 
+        self._radio_widget.setLayout(self._radio_button_layout)
+        self._kb_button = QRadioButton("KB")
+        self._kb_button.setChecked(False)
+        self._mb_button = QRadioButton("MB")
+        self._mb_button.setChecked(True)
+        self._gb_button = QRadioButton("GB")
+        self._gb_button.setChecked(False)
 
-menu = Menu(window) 
-new_item = Menu(menu, tearoff=False)
-new_item.add_command(label='About', command=about_clicked)
-menu.add_cascade(label='Help', menu=new_item)
-window.config(menu=menu)
+        self._radio_button_layout.addWidget(self._kb_button, 1)
+        self._radio_button_layout.addWidget(self._mb_button, 2)
+        self._radio_button_layout.addWidget(self._gb_button, 3)
 
-options_frame = Frame(window)
-options_frame.grid(row=0)
+        self._options_layout.addWidget(self._size_files_label, 3, 1)
+        self._options_layout.addWidget(self._size_files_textbox, 3, 2)
+        self._options_layout.addWidget(self._radio_widget, 3, 3,
+                                      QtCore.Qt.AlignLeft)
 
-#-------------------------------- Path ----------------------------------------#
+        self._create_close_layout = QHBoxLayout()
+        self._create_close_widget = QWidget() 
+        self._create_close_widget.setLayout(self._create_close_layout)
 
-path_label = Label(options_frame, text="Path", padx=20, pady=10)
-path_entry = Entry(options_frame, width=30)
-browse_btn = Button(options_frame, text="Browse", command=browse_clicked,
-                    padx=10)
+        self._create_button = QPushButton("Create")
+        self._create_button.setFixedWidth(80)
+        self._create_button.clicked.connect(self._create_clicked)
 
-path_label.grid(column=0, row=0)
-path_entry.grid(column=1, row=0)
-browse_btn.grid(column=2, row=0)
+        self._close_button = QPushButton("Close")
+        self._close_button.setFixedWidth(80)
+        self._close_button.clicked.connect(self._close_clicked)
 
-#-------------------------- Number of files -----------------------------------#
+        self._create_close_layout.addWidget(self._create_button, 1)
+        self._create_close_layout.addWidget(self._close_button, 1)
 
-files_label = Label(options_frame, text="Number of Files", padx=20, pady=10)
-files_label.grid(column=0, row=1)
+        self._options_layout.addWidget(self._create_close_widget, 4, 2)
 
-files_entry = integer_entry.integerEntry(options_frame, width=30)
-files_entry.grid(column=1, row=1)
+        self._window_layout.addWidget(self._options_widget)
+        self._window_layout.setSizeConstraint(QLayout.SetFixedSize)
 
-#---------------------------- Size of files -----------------------------------#
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setContentsMargins(0,0,0,0)
+        self.progress_label = QLabel()
+        self.progress_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.progress_label.setContentsMargins(0,0,0,0)
 
-size_label = Label(options_frame, text="Size of File(s)", padx=20, pady=10)
-size_entry = integer_entry.integerEntry(options_frame, width=30)
-size_frame = Frame(options_frame)
+        self.setLayout(self._window_layout)
 
-size_label.grid(column=0, row=2)
-size_entry.grid(column=1, row=2, padx=20)
-size_frame.grid(column=2, row=2)
 
-size_unit = IntVar()
-size_unit.set(2)
+    # Opens About window when Help is choosen in top menu
+    def _about_clicked(self):
+        About()
 
-size_kb_radio = Radiobutton(size_frame,variable=size_unit,text='KB',value=1)
-size_mb_radio = Radiobutton(size_frame,variable=size_unit,text='MB',value=2)
-size_gb_radio = Radiobutton(size_frame,variable=size_unit,text='GB',value=3)
-size_kb_radio.grid(column=0, row=0)
-size_mb_radio.grid(column=1, row=0)
-size_gb_radio.grid(column=2, row=0)
 
-#-------------------------- Create and Close ----------------------------------#
+    # Open native folder dialog to select where test files will be created
+    def _browse_clicked(self):
+        dialog = QFileDialog()
+        path = str(QFileDialog.getExistingDirectory(dialog,
+                                                         "Select Directory"))
+        self._path_textbox.setText(path)    
+   
 
-bottom_frame = Frame(options_frame)
-bottom_frame.grid(column=1, row=4)
+    # Action to button Create
+    def _create_clicked(self):
+        if self._path_textbox.text() == "" or \
+        self._number_files_textbox.text() == "" or \
+        self._size_files_textbox.text() == "":
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText("Error")
+                msg.setInformativeText("You must fill all options to "\
+                                       "create files")
+                msg.setWindowTitle("Error")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec_()
+        elif int(self._number_files_textbox.text()) == 0 or \
+        int(self._size_files_textbox.text()) == 0:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Error")
+            msg.setInformativeText("Number of files/File size cannot be zero")
+            msg.setWindowTitle("Error")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+        else:
+            if self._kb_button.isChecked(): size_unit = 1
+            elif self._mb_button.isChecked(): size_unit = 2
+            else: size_unit = 3
+            self.Files = FilesCreator(self._path_textbox.text(),
+                                            self._number_files_textbox.text(),
+                                            self._size_files_textbox.text(),
+                                            size_unit)
+            self.thread = QThread()
+            self.__threads.append((self.thread, self.Files))
+            self.Files.moveToThread(self.thread)
+            self.Files.sig_step.connect(self._step)
+            self.Files.sig_done.connect(self._done)  
+            self.Files.sig_abort.connect(self._abort)
+            self.thread.started.connect(self.Files.work)
+            self.thread.start()
+            self._change_layout('Running')
 
-create_btn = Button(bottom_frame, text="Create", command=create_clicked, padx=5)
-button_space = Label(bottom_frame, text="", font=("Arial", 2), padx=30)
-close_btn = Button(bottom_frame, text="Close", command=close_clicked, padx=5)
 
-create_btn.grid(column=0, row=0)
-button_space.grid(column=1, row=0)
-close_btn.grid(column=2, row=0)
+    # Action to button Close/Quit
+    def _close_clicked(self):
+        if self._close_button.text() == "Quit":
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Quit")
+            msg.setText("Are you sure you want to quit?\n" + \
+                        "It may take a few moments to exit the app.")
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            quit_code = msg.exec_()
+            if quit_code == QMessageBox.Yes:
+                sys.exit(0)
+        else:
+            sys.exit(0)
 
-#--------------------- Right and bottom frame spacing -------------------------#
 
-space_bottom = Label(options_frame, text="", font=("Arial", 2), padx=20)
-space_right = Label(options_frame, text="", font=("Arial", 2), padx=20)
+    # Action to button Cancel
+    def _cancel_clicked(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Confirmation")
+        msg.setText("Are you sure?\nThe current file will still be created " + \
+                    "before the program closes.")
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        cancel_code = msg.exec_()
+        if cancel_code == QMessageBox.Yes:
+            self.Files.abort()
+            self._change_layout('Stopped')
 
-space_bottom.grid(column=0, row=5)
-space_right.grid(column=3, row=0)
 
-#-----------------------------------------------------------------------------#
+    # Changes layout when app is creating files / idle
+    def _change_layout(self, status):
+        if status == 'Running':
+            disabled_style = "background-color: rgb(210,210,210); border: gray"
+            self._path_textbox.setStyleSheet(disabled_style)
+            self._number_files_textbox.setStyleSheet(disabled_style)
+            self._size_files_textbox.setStyleSheet(disabled_style)
+            self._path_textbox.setDisabled(True)
+            self._number_files_textbox.setDisabled(True)
+            self._size_files_textbox.setDisabled(True)
+            self._kb_button.setDisabled(True)
+            self._mb_button.setDisabled(True)
+            self._gb_button.setDisabled(True)
+            self._create_button.setText("Cancel")
+            self._create_button.clicked.disconnect()
+            self._create_button.clicked.connect(self._cancel_clicked)
+            self._close_button.setText("Quit")
+            self._close_button.clicked.disconnect()
+            self._close_button.clicked.connect(self._close_clicked)
+            self.progress_bar.setContentsMargins(0,0,0,0)
+            self.progress_bar.setValue(0)
+            self.progress_label.setText("0/" + \
+                                        str(self.Files._number_files))
 
-window.mainloop()
+            self._window_layout.addWidget(self.progress_label)
+            self._window_layout.addWidget(self.progress_bar)
+            self.repaint()
+        else:
+            self._path_textbox.setStyleSheet("")
+            self._number_files_textbox.setStyleSheet("")
+            self._size_files_textbox.setStyleSheet("")
+            self._path_textbox.setDisabled(False)
+            self._number_files_textbox.setDisabled(False)
+            self._size_files_textbox.setDisabled(False)
+            self._kb_button.setDisabled(False)
+            self._mb_button.setDisabled(False)
+            self._gb_button.setDisabled(False)
+            self._create_button.setText("Create")
+            self._create_button.clicked.disconnect()
+            self._create_button.clicked.connect(self._create_clicked)
+            self._close_button.setText("Close")
+            self._close_button.clicked.disconnect()
+            self._close_button.clicked.connect(self._close_clicked)
+
+            self._window_layout.removeWidget(self.progress_label)
+            self._window_layout.removeWidget(self.progress_bar)
+            self.repaint()
+
+
+    # Method to treat error during file creation
+    @pyqtSlot(str)
+    def _abort(self, error: str):
+        print(error)
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setWindowTitle("Error")
+        msg.setText("Error. See details for more information.")
+        msg.setDetailedText(error)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+        self._change_layout('Stopped')
+
+
+    # Method to treat files creation completion
+    @pyqtSlot()
+    def _done(self):
+        self._change_layout('Stopped')
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("Info")
+        msg.setInformativeText("Files created!")
+        detailed_text = ""
+        for i in range(0,len(self._files_created)):
+            detailed_text = detailed_text + self._files_created[i] + "\n"
+        msg.setDetailedText(detailed_text)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+
+
+    # Runs when each file is created to change progress bar UI values
+    @pyqtSlot(str, int)
+    def _step(self, file_name: str, number_files: int):
+        self.progress_label.setText(str(self.Files.created_files) + "/" + \
+                                    str(int(self._number_files_textbox.text())))
+        value = number_files * 100 / int(self._number_files_textbox.text())
+        self.progress_bar.setValue(value)
+        self._files_created.append(file_name)
+
+#------------------------------------------------------------------------------#
+
+if __name__ == "__main__":
+    app = QApplication([])
+
+    window = MyWindow()
+    window.show()
+
+    sys.exit(app.exec_())

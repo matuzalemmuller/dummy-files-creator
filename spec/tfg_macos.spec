@@ -41,7 +41,7 @@ app = BUNDLE(coll,
                 'NSHighResolutionCapable': 'True',
                 'CFBundleDisplayName': 'Test Files Generator',
                 'CFBundleDisplayName': 'Test Files Generator',
-                'CFBundleShortVersionString': '1.0.0',
+                'CFBundleShortVersionString': '1.1.0',
                 'NSHumanReadableCopyright': '2019, Mat Muller'
              },
              )
