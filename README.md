@@ -18,7 +18,7 @@ Desktop application to generate test files. Using this program you can easily cr
 
 <img src="https://i.imgur.com/YuCPGM5.png" width="632" height="221" />
 
-This program has been written in Python 3.7 and packaged as an application using [pyinstaller](https://www.pyinstaller.org/).
+This program has been written and run using [Python 3.7.3](https://www.python.org/downloads/release/python-373/) + [PyQt5](https://pypi.org/project/PyQt5/) and packaged as an application using [PyInstaller](https://www.pyinstaller.org/).
 
 ## Installation
 
@@ -32,8 +32,7 @@ This program has been written in Python 3.7 and packaged as an application using
 
 * macOS:
 
-  * Dowload and install [Python 3.7.0](https://www.python.org/downloads/release/python-370/) or [later](https://www.python.org/downloads/).
-  * Download the `Test_Files_Generator.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract the image and run the application `Test Files Generator.app`.
+  * Download the `Test_Files_Generator.dmg` file from the [releases](https://github.com/matuzalemmuller/test-files-generator/releases) page, extract/mount the image and run the application `Test Files Generator.app`.
     * Alternatively, you can download the tar package `test-files-generator-darwin.tar.gz` and run the executable `test-files-generator-darwin`.
 
 ## Manually running and building the app

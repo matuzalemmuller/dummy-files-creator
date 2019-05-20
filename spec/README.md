@@ -15,7 +15,7 @@ pip3 install pyinstaller
 Having Python 3.7.0 (or later) and PyInstaller installed, you can create the `.exe` package:
 
 ```
-pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spec
+pyinstaller --clean --windowed --onefile tfg_windows.spec
 ```
 
 ### Linux
@@ -23,7 +23,7 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_windows.spe
 Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
-pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
+pyinstaller --clean --windowed tfg_linux.spec
 ```
 
 
@@ -32,37 +32,5 @@ pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_linux.spec
 Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
-pyinstaller --clean --windowed --hidden-import tkinter --onefile tfg_macos.spec
+pyinstaller --clean --windowed --onefile tfg_macos.spec
 ```
-
-After creating the `.pkg` file and the folder with all the libraries, it may be necessary to import the `tk` and `tcl` frameworks inside the app. This happens because PyInstaller may fail importing the libraries, so that must be done manually. The steps on how to import the frameworks are outlined below:
-
-* Create folders inside the `Test Files Generator.app` package and the `test-files-generator-darwin` folder for `tk` and `tcl`:
-
-```
-mkdir dist/Test\ Files\ Generator.app/Contents/MacOS/tk
-mkdir dist/Test\ Files\ Generator.app/Contents/MacOS/tcl
-```
-```
-mkdir dist/test-files-generator-darwin/tk
-mkdir dist/test-files-generator-darwin/tcl
-```
-
-* Copy the frameworks inside the folders (replace `<version>` by the version of Tcl installed in your Mac):
-
-```
-cp  /System/Library/Frameworks/Tk.framework/Tk \
-    dist/Test\ Files\ Generator.app/Contents/MacOS/tk
-
-cp  /System/Library/Frameworks/Tcl.framework/Versions/<version>/Tcl \
-    dist/Test\ Files\ Generator.app/Contents/MacOS/tcl
-```
-```
-cp  /System/Library/Frameworks/Tk.framework/Tk \
-    dist/test-files-generator-darwin/Contents/MacOS/tk
-
-cp  /System/Library/Frameworks/Tcl.framework/Versions/<version>/Tcl \
-    dist/test-files-generator-darwin/Contents/MacOS/tcl
-```
-
-You should now be able to run the `Test Files Generator.app` application and the `test-files-generator-darwin` executable.
