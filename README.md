@@ -41,6 +41,4 @@ See the instructions to manually [run the app](src/README.md) and to [generate t
 
 ## Contributing
 
-Want to contribute? Not everyone has the same opportunities that I had to study and work, so I will be happy if you donate to a [charity](https://www.globalgiving.org/) as it will motivate me to work on more open-source projects as I know that I will be helping someone.
-
-Also, feel free to fork and/or star the project! 
+Feel free to fork and/or star the project.
