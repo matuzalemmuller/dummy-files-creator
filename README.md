@@ -42,3 +42,9 @@ See the instructions to manually [run the app](src/README.md) and to [generate t
 ## Contributing
 
 Feel free to fork and/or star the project.
+
+## TODO
+
+* Fix minor bugs in window coordination (automatically close cancellation pop-up when completion message is displayed)
+* Add TFG icon to Title Bar and window icon
+* Verify compatibility with various OS versions
