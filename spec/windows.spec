@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['..\\src\\tfg.py'],
+a = Analysis(['..\\src\\dummy_files_creator.py'],
              pathex=['src'],
              binaries=[],
              datas=[
@@ -22,7 +22,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='Test Files Generator',
+          name='Dummy Files Creator',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

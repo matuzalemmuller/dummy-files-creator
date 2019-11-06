@@ -11,5 +11,5 @@ pip3 install -r requirements.txt
 Run the code:
 
 ```
-python3.7 tfg.py
+python3.7 dummy_files_creator.py
 ```

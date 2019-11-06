@@ -15,7 +15,7 @@ pip3 install pyinstaller
 Having Python 3.7.0 (or later) and PyInstaller installed, you can create the `.exe` package:
 
 ```
-pyinstaller --clean --windowed --onefile tfg_windows.spec
+pyinstaller --clean --windowed --onefile windows.spec
 ```
 
 ### Linux
@@ -23,7 +23,7 @@ pyinstaller --clean --windowed --onefile tfg_windows.spec
 Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
-pyinstaller --clean --windowed tfg_linux.spec
+pyinstaller --clean --windowed linux.spec
 ```
 
 
@@ -32,5 +32,5 @@ pyinstaller --clean --windowed tfg_linux.spec
 Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 
 ```
-pyinstaller --clean --windowed --onefile tfg_macos.spec
+pyinstaller --clean --windowed --onefile macos.spec
 ```

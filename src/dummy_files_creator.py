@@ -30,7 +30,7 @@ class MyWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Test Files Generator")
+        self.setWindowTitle("Dummy Files Creator")
         self.setWindowIcon(QtGui.QIcon('../icon/icon.png'))
         QThread.currentThread().setObjectName('main')
         self.__threads = []
@@ -170,24 +170,26 @@ class MyWindow(QWidget):
                                        "create files")
                 msg.setWindowTitle("Error")
                 msg.setStandardButtons(QMessageBox.Ok)
+                msg.setStyleSheet("QLabel{min-width: 100px;}")
                 msg.exec_()
         elif int(self._number_files_textbox.text()) == 0 or \
-        int(self._size_files_textbox.text()) == 0:
+             int(self._size_files_textbox.text()) == 0:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Error")
             msg.setInformativeText("Number of files/File size cannot be zero")
             msg.setWindowTitle("Error")
             msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStyleSheet("QLabel{min-width: 100px;}")
             msg.exec_()
         else:
-            if self._kb_button.isChecked(): size_unit = 1
-            elif self._mb_button.isChecked(): size_unit = 2
-            else: size_unit = 3
+            if self._kb_button.isChecked(): size_unit = 0
+            elif self._mb_button.isChecked(): size_unit = 1
+            else: size_unit = 2
             self.Files = FilesCreator(self._path_textbox.text(),
                                             self._number_files_textbox.text(),
                                             self._size_files_textbox.text(),
-                                            size_unit)
+                                            size_unit, 1024)
             self.thread = QThread()
             self.__threads.append((self.thread, self.Files))
             self.Files.moveToThread(self.thread)
@@ -205,8 +207,7 @@ class MyWindow(QWidget):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Quit")
-            msg.setText("Are you sure you want to quit?\n" + \
-                        "It may take a few moments to exit the app.")
+            msg.setText("Are you sure you want to quit?")
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             quit_code = msg.exec_()
             if quit_code == QMessageBox.Yes:
@@ -220,8 +221,7 @@ class MyWindow(QWidget):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Confirmation")
-        msg.setText("Are you sure?\nThe current file will still be created " + \
-                    "before the program closes.")
+        msg.setText("Are you sure?")
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         cancel_code = msg.exec_()
         if cancel_code == QMessageBox.Yes:
@@ -242,6 +242,7 @@ class MyWindow(QWidget):
             self._kb_button.setDisabled(True)
             self._mb_button.setDisabled(True)
             self._gb_button.setDisabled(True)
+            self._browse_button.setDisabled(True)
             self._create_button.setText("Cancel")
             self._create_button.clicked.disconnect()
             self._create_button.clicked.connect(self._cancel_clicked)
@@ -266,6 +267,7 @@ class MyWindow(QWidget):
             self._kb_button.setDisabled(False)
             self._mb_button.setDisabled(False)
             self._gb_button.setDisabled(False)
+            self._browse_button.setDisabled(False)
             self._create_button.setText("Create")
             self._create_button.clicked.disconnect()
             self._create_button.clicked.connect(self._create_clicked)
@@ -288,6 +290,7 @@ class MyWindow(QWidget):
         msg.setText("Error. See details for more information.")
         msg.setDetailedText(error)
         msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStyleSheet("QLabel{min-width: 100px;}")
         msg.exec_()
         self._change_layout('Stopped')
 
@@ -300,11 +303,12 @@ class MyWindow(QWidget):
         msg.setIcon(QMessageBox.Information)
         msg.setText("Info")
         msg.setInformativeText("Files created!")
-        detailed_text = ""
+        detailed_text="Files created at " + self._path_textbox.text() + ":\n\n"
         for i in range(0,len(self._files_created)):
             detailed_text = detailed_text + self._files_created[i] + "\n"
         msg.setDetailedText(detailed_text)
         msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStyleSheet("QLabel{min-width: 150px;}")
         msg.exec_()
 
 

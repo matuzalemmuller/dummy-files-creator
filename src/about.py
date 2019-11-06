@@ -15,8 +15,8 @@ class About(QDialog):
 
         # Project name
         self._git = QLabel("2019 <a href=\""+
-                           "https://github.com/matuzalemmuller/test-files-generator\""+
-                           ">Test Files Generator</a>")
+                           "https://github.com/matuzalemmuller/dummy-files-creator\""+
+                           ">Dummy Files Creator</a>")
         self._git.setOpenExternalLinks(True)
         self._git.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(self._git)
@@ -30,7 +30,7 @@ class About(QDialog):
         self.layout.addWidget(self._developer)
 
         # Version
-        self._developer = QLabel("v1.1.0")
+        self._developer = QLabel("v2.0.0")
         self._developer.setOpenExternalLinks(True)
         self._developer.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(self._developer)
