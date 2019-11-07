@@ -1,4 +1,5 @@
 import sys
+import images_qr
 from about import About
 from files_creator import FilesCreator
 from PyQt5 import QtGui
@@ -20,7 +21,7 @@ class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Dummy Files Creator")
-        self.setWindowIcon(QtGui.QIcon('../icon/icon.png'))
+        self.setWindowIcon(QtGui.QIcon(':/icon.png'))
         QThread.currentThread().setObjectName('main')
         self.__threads = []
         self._files_created = []
@@ -292,6 +293,8 @@ class MyWindow(QWidget):
             self._debug_progress_label.setText("")
             self._debug_progress_bar.setValue(0)
             if self._debug_checkbox.isChecked():
+                self._debug_progress_bar.show()
+                self._debug_progress_label.show()
                 self._debug_progress_bar.setContentsMargins(0,0,0,0)
                 self._window_layout.addWidget(self._debug_progress_label)
                 self._window_layout.addWidget(self._debug_progress_bar)
@@ -326,9 +329,9 @@ class MyWindow(QWidget):
             self._close_button.clicked.disconnect()
             self._close_button.clicked.connect(self._close_clicked)
 
-            self._debug_progress_label.setText("")
-            self._debug_progress_bar.setValue(0)
             if self._debug_checkbox.isChecked():
+                self._debug_progress_bar.hide()
+                self._debug_progress_label.hide()
                 self._window_layout.removeWidget(self._debug_progress_label)
                 self._window_layout.removeWidget(self._debug_progress_bar)
 
@@ -359,6 +362,7 @@ class MyWindow(QWidget):
         self._change_layout('Stopped')
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Info")
         msg.setText("Info")
         msg.setInformativeText("Files created!")
         detailed_text="Files created at " + self._path_textbox.text() + ":\n\n"

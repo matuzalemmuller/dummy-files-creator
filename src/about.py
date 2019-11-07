@@ -1,4 +1,6 @@
+import images_qr
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QVBoxLayout
@@ -10,6 +12,8 @@ class About(QDialog):
         super().__init__()
 
         self.setWindowTitle("About")
+        self.setWindowIcon(QtGui.QIcon(':/icon.png'))
+        self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
 
         self.layout = QVBoxLayout()
 

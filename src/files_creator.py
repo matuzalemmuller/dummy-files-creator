@@ -36,7 +36,7 @@ class FilesCreator(QObject):
 
         if self._debug == True:
             while self.created_files < self._number_files:
-                file_name = str(uuid.uuid4())
+                file_name = str(uuid.uuid4())+".dummy"
                 try:
                     with open(self._path+"/"+file_name, "wb") as fout:
                         for iter in range(chunks):
@@ -54,7 +54,7 @@ class FilesCreator(QObject):
         else:
             # "Repeats" code without debug check for better performance
             while self.created_files < self._number_files:
-                file_name = str(uuid.uuid4())
+                file_name = str(uuid.uuid4())+".dummy"
                 try:
                     with open(self._path+"/"+file_name, "wb") as fout:
                         for iter in range(chunks):
