@@ -1,11 +1,9 @@
 ## Using PyInstaller to generate the packages
 
-See [this guide](../src/README.md) to learn the prerequisites to run the python code.
-
-To generate the packages, you must install `pyinstaller` using `pip`:
+Install the dependencies:
 
 ```
-pip3 install pyinstaller
+pip3 install -r ../requirements.txt
 ```
 
 > Note that all commands must be run inside the `spec` folder due to the folder paths used.
@@ -18,16 +16,7 @@ Having Python 3.7.0 (or later) and PyInstaller installed, you can create the `.e
 pyinstaller --clean --windowed --onefile windows.spec
 ```
 
-### Linux
-
-Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
-
-```
-pyinstaller --clean --windowed linux.spec
-```
-
-
-### masOS
+### macOS
 
 Having Python 3.7.0 (or later) and PyInstaller, you can create the portable version of the app:
 

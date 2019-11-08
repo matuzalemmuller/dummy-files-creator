@@ -1,5 +1,5 @@
 import sys
-import images_qr
+import icon_qt
 from about import About
 from files_creator import FilesCreator
 from PyQt5 import QtGui
@@ -370,7 +370,7 @@ class MyWindow(QWidget):
             detailed_text = detailed_text + self._files_created[i] + "\n"
         msg.setDetailedText(detailed_text)
         msg.setStandardButtons(QMessageBox.Ok)
-        msg.setStyleSheet("QLabel{min-width: 150px;}")
+        msg.setStyleSheet("QLabel{min-width: 175px;}")
         msg.exec_()
 
 
