@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['../src/tfg.py'],
+a = Analysis(['../src/dummy_files_creator.py'],
              pathex=['src'],
              binaries=[],
              datas=[
@@ -20,7 +20,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='test-files-generator-darwin',
+          name='dummy-files-creator-darwin',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -32,16 +32,15 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='test-files-generator-darwin')
+               name='dummy-files-creator-darwin')
 app = BUNDLE(coll,
-             name='Test Files Generator.app',
+             name='Dummy Files Creator.app',
              icon='../icon/icon.icns',
              info_plist={
-                'LSUIElement': '1',
+                'LSBackgroundOnly': 'False',
                 'NSHighResolutionCapable': 'True',
-                'CFBundleDisplayName': 'Test Files Generator',
-                'CFBundleDisplayName': 'Test Files Generator',
-                'CFBundleShortVersionString': '1.1.0',
+                'CFBundleDisplayName': 'Dummy Files Creator',
+                'CFBundleShortVersionString': '1.2.0',
                 'NSHumanReadableCopyright': '2019, Mat Muller'
              },
              )

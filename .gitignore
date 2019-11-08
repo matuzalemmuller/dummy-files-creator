@@ -12,7 +12,7 @@ build
 dist
 
 # VSCode
-settings.json
+.vscode
 
 # Local releases
 release

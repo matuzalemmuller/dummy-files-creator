@@ -1,10 +1,10 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['../src/tfg.py'],
+a = Analysis(['..\\src\\dummy_files_creator.py'],
              pathex=['src'],
              binaries=[],
              datas=[
-                    ('../icon/icon.png','icon')
+                    ('..\\icon\\icon.png','icon')
                    ],
              hiddenimports=[],
              hookspath=[],
@@ -18,18 +18,15 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           [],
-          exclude_binaries=True,
-          name='test-files-generator-x86_64',
+          name='Dummy Files Creator',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True )
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               name='test-files-generator-x86_64')
+          runtime_tmpdir=None,
+          console=False,
+          icon='..\\icon\\icon.ico')

@@ -1,4 +1,5 @@
 import sys
+import icon_qt
 from about import About
 from files_creator import FilesCreator
 from PyQt5 import QtGui
@@ -7,21 +8,10 @@ from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtCore import QThread
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QButtonGroup
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtWidgets import QGridLayout
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QLayout
-from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QProgressBar
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QRadioButton
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QAction
-from PyQt5.QtWidgets import QMenuBar
+from PyQt5.QtWidgets import QApplication, QButtonGroup, QCheckBox, QComboBox,  \
+    QFileDialog, QGridLayout, QHBoxLayout, QLabel, QLayout, QLineEdit,         \
+    QMessageBox, QProgressBar, QPushButton, QRadioButton, QWidget, QAction,    \
+    QMenuBar
 
 #------------------------------------------------------------------------------#
 
@@ -30,8 +20,8 @@ class MyWindow(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Test Files Generator")
-        self.setWindowIcon(QtGui.QIcon('../icon/icon.png'))
+        self.setWindowTitle("Dummy Files Creator")
+        self.setWindowIcon(QtGui.QIcon(':/icon.png'))
         QThread.currentThread().setObjectName('main')
         self.__threads = []
         self._files_created = []
@@ -100,11 +90,11 @@ class MyWindow(QWidget):
         self._radio_button_layout.setSpacing(5)
         self._radio_widget = QWidget() 
         self._radio_widget.setLayout(self._radio_button_layout)
-        self._kb_button = QRadioButton("KB")
+        self._kb_button = QRadioButton("KiB")
         self._kb_button.setChecked(False)
-        self._mb_button = QRadioButton("MB")
+        self._mb_button = QRadioButton("MiB")
         self._mb_button.setChecked(True)
-        self._gb_button = QRadioButton("GB")
+        self._gb_button = QRadioButton("GiB")
         self._gb_button.setChecked(False)
 
         self._radio_button_layout.addWidget(self._kb_button, 1)
@@ -115,6 +105,43 @@ class MyWindow(QWidget):
         self._options_layout.addWidget(self._size_files_textbox, 3, 2)
         self._options_layout.addWidget(self._radio_widget, 3, 3,
                                       QtCore.Qt.AlignLeft)
+
+        self._advanced_layout = QGridLayout()
+        self._advanced_layout.setContentsMargins(0,0,0,0)
+        self._advanced_widget = QWidget()
+        self._advanced_widget.setLayout(self._advanced_layout)
+        self._options_layout.addWidget(self._advanced_widget, 4, 2)
+
+        self._debug_label = QLabel()
+        self._debug_label.setText("Debug")
+        self._debug_label.setMaximumHeight(17)
+        self._debug_label.setAlignment(QtCore.Qt.AlignRight)
+        self._advanced_layout.addWidget(self._debug_label, 1, 1)
+
+        self._debug_checkbox = QCheckBox()
+        self._debug_checkbox.setChecked(False)
+        self._debug_checkbox.setToolTip("Impacts performance")
+        self._advanced_layout.addWidget(self._debug_checkbox, 1, 2,
+                                        QtCore.Qt.AlignLeft)
+
+        self._chunksize_label = QLabel()
+        self._chunksize_label.setText("Chunk Size")
+        self._chunksize_label.setMaximumHeight(17)
+        self._chunksize_label.setAlignment(QtCore.Qt.AlignRight)
+        self._advanced_layout.addWidget(self._chunksize_label, 1, 3)
+
+        self._chunksize_textbox = QLineEdit()
+        self._chunksize_textbox.setText("1024")
+        self._chunksize_textbox.resize(50,20)
+        self._chunksize_textbox.setMaximumWidth(50)
+        self._chunksize_textbox.setValidator(self._validator)
+        self._advanced_layout.addWidget(self._chunksize_textbox, 1, 4,
+                                        QtCore.Qt.AlignCenter)
+        
+        self._chunksize_combobox = QComboBox()
+        self._chunksize_combobox.addItems(["KiB", "MiB", "GiB"])
+        self._advanced_layout.addWidget(self._chunksize_combobox, 1, 5,
+                                        QtCore.Qt.AlignCenter)
 
         self._create_close_layout = QHBoxLayout()
         self._create_close_widget = QWidget() 
@@ -130,17 +157,22 @@ class MyWindow(QWidget):
 
         self._create_close_layout.addWidget(self._create_button, 1)
         self._create_close_layout.addWidget(self._close_button, 1)
-
-        self._options_layout.addWidget(self._create_close_widget, 4, 2)
+        self._options_layout.addWidget(self._create_close_widget, 5, 2)
 
         self._window_layout.addWidget(self._options_widget)
         self._window_layout.setSizeConstraint(QLayout.SetFixedSize)
 
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setContentsMargins(0,0,0,0)
-        self.progress_label = QLabel()
-        self.progress_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.progress_label.setContentsMargins(0,0,0,0)
+        self._debug_progress_bar = QProgressBar()
+        self._debug_progress_bar.setContentsMargins(0,0,0,0)
+        self._debug_progress_label = QLabel()
+        self._debug_progress_label.setAlignment(QtCore.Qt.AlignCenter)
+        self._debug_progress_label.setContentsMargins(0,0,0,0)
+
+        self._overall_progress_bar = QProgressBar()
+        self._overall_progress_bar.setContentsMargins(0,0,0,0)
+        self._overall_progress_label = QLabel()
+        self._overall_progress_label.setAlignment(QtCore.Qt.AlignCenter)
+        self._overall_progress_label.setContentsMargins(0,0,0,0)
 
         self.setLayout(self._window_layout)
 
@@ -170,28 +202,34 @@ class MyWindow(QWidget):
                                        "create files")
                 msg.setWindowTitle("Error")
                 msg.setStandardButtons(QMessageBox.Ok)
+                msg.setStyleSheet("QLabel{min-width: 100px;}")
                 msg.exec_()
         elif int(self._number_files_textbox.text()) == 0 or \
-        int(self._size_files_textbox.text()) == 0:
+             int(self._size_files_textbox.text()) == 0:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
             msg.setText("Error")
             msg.setInformativeText("Number of files/File size cannot be zero")
             msg.setWindowTitle("Error")
             msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStyleSheet("QLabel{min-width: 100px;}")
             msg.exec_()
         else:
-            if self._kb_button.isChecked(): size_unit = 1
-            elif self._mb_button.isChecked(): size_unit = 2
-            else: size_unit = 3
+            if self._kb_button.isChecked(): size_unit = 0
+            elif self._mb_button.isChecked(): size_unit = 1
+            else: size_unit = 2
             self.Files = FilesCreator(self._path_textbox.text(),
-                                            self._number_files_textbox.text(),
-                                            self._size_files_textbox.text(),
-                                            size_unit)
+                                      self._number_files_textbox.text(),
+                                      self._size_files_textbox.text(),
+                                      size_unit,
+                                      self._chunksize_textbox.text(),
+                                      self._chunksize_combobox.currentIndex(),
+                                      self._debug_checkbox.isChecked())
             self.thread = QThread()
             self.__threads.append((self.thread, self.Files))
             self.Files.moveToThread(self.thread)
-            self.Files.sig_step.connect(self._step)
+            self.Files.sig_step_overall.connect(self._step_overall)
+            self.Files.sig_step_file.connect(self._step_file)
             self.Files.sig_done.connect(self._done)  
             self.Files.sig_abort.connect(self._abort)
             self.thread.started.connect(self.Files.work)
@@ -205,8 +243,7 @@ class MyWindow(QWidget):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setWindowTitle("Quit")
-            msg.setText("Are you sure you want to quit?\n" + \
-                        "It may take a few moments to exit the app.")
+            msg.setText("Are you sure you want to quit?")
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             quit_code = msg.exec_()
             if quit_code == QMessageBox.Yes:
@@ -220,8 +257,7 @@ class MyWindow(QWidget):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Confirmation")
-        msg.setText("Are you sure?\nThe current file will still be created " + \
-                    "before the program closes.")
+        msg.setText("Are you sure?")
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         cancel_code = msg.exec_()
         if cancel_code == QMessageBox.Yes:
@@ -232,40 +268,60 @@ class MyWindow(QWidget):
     # Changes layout when app is creating files / idle
     def _change_layout(self, status):
         if status == 'Running':
+            self._files_created.clear()
             disabled_style = "background-color: rgb(210,210,210); border: gray"
             self._path_textbox.setStyleSheet(disabled_style)
             self._number_files_textbox.setStyleSheet(disabled_style)
             self._size_files_textbox.setStyleSheet(disabled_style)
             self._path_textbox.setDisabled(True)
+            self._browse_button.setDisabled(True)
             self._number_files_textbox.setDisabled(True)
             self._size_files_textbox.setDisabled(True)
             self._kb_button.setDisabled(True)
             self._mb_button.setDisabled(True)
             self._gb_button.setDisabled(True)
+            self._debug_checkbox.setDisabled(True)
+            self._chunksize_textbox.setDisabled(True)
+            self._chunksize_combobox.setDisabled(True)
             self._create_button.setText("Cancel")
             self._create_button.clicked.disconnect()
             self._create_button.clicked.connect(self._cancel_clicked)
             self._close_button.setText("Quit")
             self._close_button.clicked.disconnect()
             self._close_button.clicked.connect(self._close_clicked)
-            self.progress_bar.setContentsMargins(0,0,0,0)
-            self.progress_bar.setValue(0)
-            self.progress_label.setText("0/" + \
+
+            self._debug_progress_label.setText("")
+            self._debug_progress_bar.setValue(0)
+            if self._debug_checkbox.isChecked():
+                self._debug_progress_bar.show()
+                self._debug_progress_label.show()
+                self._debug_progress_bar.setContentsMargins(0,0,0,0)
+                self._window_layout.addWidget(self._debug_progress_label)
+                self._window_layout.addWidget(self._debug_progress_bar)
+
+            self._overall_progress_bar.setContentsMargins(0,0,0,0)
+            self._overall_progress_bar.setValue(0)
+            self._overall_progress_label.setText("0/" + \
                                         str(self.Files._number_files))
 
-            self._window_layout.addWidget(self.progress_label)
-            self._window_layout.addWidget(self.progress_bar)
+            self._window_layout.addWidget(self._overall_progress_label)
+            self._window_layout.addWidget(self._overall_progress_bar)
+
             self.repaint()
         else:
             self._path_textbox.setStyleSheet("")
             self._number_files_textbox.setStyleSheet("")
             self._size_files_textbox.setStyleSheet("")
             self._path_textbox.setDisabled(False)
+            self._browse_button.setDisabled(False)
             self._number_files_textbox.setDisabled(False)
             self._size_files_textbox.setDisabled(False)
             self._kb_button.setDisabled(False)
             self._mb_button.setDisabled(False)
             self._gb_button.setDisabled(False)
+            self._debug_checkbox.setDisabled(False)
+            self._chunksize_textbox.setDisabled(False)
+            self._chunksize_combobox.setDisabled(False)
             self._create_button.setText("Create")
             self._create_button.clicked.disconnect()
             self._create_button.clicked.connect(self._create_clicked)
@@ -273,8 +329,15 @@ class MyWindow(QWidget):
             self._close_button.clicked.disconnect()
             self._close_button.clicked.connect(self._close_clicked)
 
-            self._window_layout.removeWidget(self.progress_label)
-            self._window_layout.removeWidget(self.progress_bar)
+            if self._debug_checkbox.isChecked():
+                self._debug_progress_bar.hide()
+                self._debug_progress_label.hide()
+                self._window_layout.removeWidget(self._debug_progress_label)
+                self._window_layout.removeWidget(self._debug_progress_bar)
+
+            self._window_layout.removeWidget(self._overall_progress_label)
+            self._window_layout.removeWidget(self._overall_progress_bar)
+
             self.repaint()
 
 
@@ -288,6 +351,7 @@ class MyWindow(QWidget):
         msg.setText("Error. See details for more information.")
         msg.setDetailedText(error)
         msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStyleSheet("QLabel{min-width: 100px;}")
         msg.exec_()
         self._change_layout('Stopped')
 
@@ -298,24 +362,39 @@ class MyWindow(QWidget):
         self._change_layout('Stopped')
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Info")
         msg.setText("Info")
         msg.setInformativeText("Files created!")
-        detailed_text = ""
+        detailed_text="Files created at " + self._path_textbox.text() + ":\n\n"
         for i in range(0,len(self._files_created)):
             detailed_text = detailed_text + self._files_created[i] + "\n"
         msg.setDetailedText(detailed_text)
         msg.setStandardButtons(QMessageBox.Ok)
+        msg.setStyleSheet("QLabel{min-width: 175px;}")
         msg.exec_()
 
 
     # Runs when each file is created to change progress bar UI values
     @pyqtSlot(str, int)
-    def _step(self, file_name: str, number_files: int):
-        self.progress_label.setText(str(self.Files.created_files) + "/" + \
+    def _step_overall(self, file_name: str, number_files: int):
+        self._overall_progress_label.setText(str(self.Files.created_files) + "/" + \
                                     str(int(self._number_files_textbox.text())))
         value = number_files * 100 / int(self._number_files_textbox.text())
-        self.progress_bar.setValue(value)
+        self._overall_progress_bar.setValue(value)
         self._files_created.append(file_name)
+
+
+    # Runs when each file chunk is generated to change progress bar UI values
+    @pyqtSlot(str, int, int)
+    def _step_file(self, file_name: str, chunk_idx: int, total: int):
+        self._debug_progress_label.setText("Creating " + file_name + "...")
+        value = (chunk_idx * 100) / total
+        self._debug_progress_bar.setValue(value)
+
+
+    # Handles clicking in Exit window button
+    def closeEvent(self, event):
+        self._close_clicked()
 
 #------------------------------------------------------------------------------#
 
