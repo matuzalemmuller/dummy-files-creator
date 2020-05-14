@@ -1,9 +1,5 @@
 # Dummy Files Creator
 
-*Hosted at [GitHub](https://github.com/matuzalemmuller/dummy-files-creator) and mirrored to [GitLab](https://gitlab.com/matuzalemmuller/dummy-files-creator).*
-
-## Description
-
 Desktop application to generate dummy files with random content. This application easily creates a batch of random files with a specific size. **All sizes are considered as corresponding powers of 2<sup>10</sup> [(KiB, MiB, GiB)](https://en.wikipedia.org/wiki/Orders_of_magnitude_(data))**.
 
 By default, the program generates files in 1 MiB increment in order to increase performance of large file generation. That parameter can be customized in the `Chunk Size` option.
