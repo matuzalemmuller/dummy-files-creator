@@ -16,3 +16,9 @@ dist
 
 # Local releases
 release
+
+# Test data
+test-data
+
+# Quick and dirty script to create files and list them
+rm_and_run.sh

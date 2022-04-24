@@ -1,75 +1,65 @@
 import os
 import math
 import uuid
-from PyQt5.QtCore import QObject
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtCore import pyqtSlot
 
+# Exceptions:
+# * Ao criar os arquivos (automatico)
+# * Ao criar o arquivo de log (automatico)
+# * Ao validar as unidades
 
-class FilesCreator(QObject):
-    sig_step_overall = pyqtSignal(str, int)
-    sig_step_file = pyqtSignal(str, int, int)
-    sig_done = pyqtSignal()
-    sig_abort = pyqtSignal(str)
-
-    def __init__(self, path, number_files, size_files, size_unit, chunksize,
-                 chunksize_unit, debug):
-        super().__init__()
-        self._path = path
-        self._number_files = int(number_files)
-        self._file_size = int(size_files) * (1024 ** size_unit) #1073741824
-        self._chunksize = int(chunksize) * (1024 ** chunksize_unit)
-        self._debug = debug
-        self.created_files = 0
-        self.errorFlag = 0
-        self.error = ""
-        self.__abort = False
-        self._running = False
-
-
-    @pyqtSlot()
-    def work(self):
-        self._running = True
-
-        chunks = math.ceil(self._file_size / self._chunksize)
-        os_size = int(self._file_size * 1024 / chunks)
-
-        if self._debug == True:
-            while self.created_files < self._number_files:
-                file_name = str(uuid.uuid4())+".dummy"
-                try:
-                    with open(self._path+"/"+file_name, "wb") as fout:
-                        for iter in range(chunks):
-                            fout.write(os.urandom(os_size))
-                            self.sig_step_file.emit(file_name, iter, chunks)
-                            if self.__abort == True:
-                                self._running = False
-                                os.remove(self._path+"/"+file_name)
-                                return
-                except IOError as e:
-                    self.sig_abort.emit(str(e))
-                    return
-                self.created_files+=1
-                self.sig_step_overall.emit(file_name, self.created_files)
+class FilesCreator:
+    def create_files(
+        self,
+        path: str,
+        number_files: int,
+        size_file: int,
+        size_unit: str,
+        chunk_size: int,
+        chunk_unit: str,
+    ):
+        if size_unit == "KiB":
+            size_mult = 1
+        elif size_unit == "MiB":
+            size_mult = 2
+        elif size_unit == "GiB":
+            size_mult = 2
         else:
-            # "Repeats" code without debug check for better performance
-            while self.created_files < self._number_files:
-                file_name = str(uuid.uuid4())+".dummy"
-                try:
-                    with open(self._path+"/"+file_name, "wb") as fout:
-                        for iter in range(chunks):
-                            fout.write(os.urandom(os_size))                         
-                            if self.__abort == True:
-                                self._running = False
-                                os.remove(self._path+"/"+file_name)
-                                return
-                except IOError as e:
-                    self.sig_abort.emit(str(e))
-                    return
-                self.created_files+=1
-                self.sig_step_overall.emit(file_name, self.created_files)            
-        self.sig_done.emit()
+            return False
 
+        if chunk_unit == "KiB":
+            chunk_mult = 1
+        elif chunk_unit == "MiB":
+            chunk_mult = 2
+        elif chunk_unit == "GiB":
+            chunk_mult = 3
+        else:
+            return False
 
-    def abort(self):
-        self.__abort = True
+        # Converts both values to bytes
+        file_size_bytes = math.ceil(size_file * (1024**size_mult))
+        chunk_size_bytes = math.ceil(chunk_size * (1024**chunk_mult))
+
+        # If the chunk size is too large, use the file size instead
+        if file_size_bytes < chunk_size_bytes:
+            chunk_size_bytes = file_size_bytes
+            number_of_chunks = 1
+        else:
+            number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
+
+        print("file_size_bytes: " + str(file_size_bytes))
+        print("chunk_size_bytes: " + str(chunk_size_bytes))
+        print("number_of_chunks: " + str(number_of_chunks))
+
+        created_files = 0
+        while created_files < number_files:
+            file_name = str(uuid.uuid4()) + ".dummy"
+            try:
+                with open(path + "/" + file_name, "wb") as fout:
+                    for iter in range(number_of_chunks):
+                        fout.write(os.urandom(chunk_size_bytes))
+            except IOError as e:
+                print(e)
+                return
+            created_files += 1
+
+        return True
