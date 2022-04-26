@@ -8,7 +8,7 @@ import uuid
 # * Ao validar as unidades
 
 class FilesCreator:
-    def create_files(
+    def create_file(
         self,
         path: str,
         number_files: int,
@@ -46,20 +46,13 @@ class FilesCreator:
         else:
             number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
 
-        print("file_size_bytes: " + str(file_size_bytes))
-        print("chunk_size_bytes: " + str(chunk_size_bytes))
-        print("number_of_chunks: " + str(number_of_chunks))
-
-        created_files = 0
-        while created_files < number_files:
-            file_name = str(uuid.uuid4()) + ".dummy"
-            try:
-                with open(path + "/" + file_name, "wb") as fout:
-                    for iter in range(number_of_chunks):
-                        fout.write(os.urandom(chunk_size_bytes))
-            except IOError as e:
-                print(e)
-                return
-            created_files += 1
+        file_name = str(uuid.uuid4()) + ".dummy"
+        try:
+            with open(path + "/" + file_name, "wb") as fout:
+                for iter in range(number_of_chunks):
+                    fout.write(os.urandom(chunk_size_bytes))
+        except IOError as e:
+            print(e)
+            return
 
         return True
