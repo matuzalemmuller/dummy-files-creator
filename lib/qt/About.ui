@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>About</class>
+ <widget class="QDialog" name="About">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>181</width>
-    <height>72</height>
+    <width>182</width>
+    <height>101</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>182</width>
+    <height>101</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>182</width>
+    <height>101</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>About</string>
@@ -19,11 +37,14 @@
      <x>10</x>
      <y>10</y>
      <width>161</width>
-     <height>51</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;2022 &lt;a href=&quot;https://github.com/matuzalemmuller/dummy-files-creator&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Dummy Files Creator&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;by &lt;a href=&quot;https://matuzalemmuller.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Matuzalem (Mat) Muller&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;2022 &lt;a href=&quot;https://github.com/matuzalemmuller/dummy-files-creator&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Dummy Files Creator&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;by &lt;a href=&quot;https://matuzalemmuller.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Matuzalem (Mat) Muller&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;v3.0.0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

@@ -5,10 +5,19 @@ import sys
 from files_creator import FilesCreator
 
 
+class About(QtWidgets.QDialog):
+    def __init__(self):
+        super(About, self).__init__()  # Call the inherited classes __init__ method
+        uic.loadUi("../lib/qt/About.ui", self)  # Load the .ui file
+        self.exec_()
+        self.activateWindow()
+
+
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi("../lib/qt/MainWindow.ui", self)  # Load the .ui file
+        self.setWindowIcon(QtGui.QIcon("../icon.png"))
         # Initialize UI elements
         self.creating_files = False  # Files are not being created
         self.__set_validator()
@@ -20,7 +29,6 @@ class Ui(QtWidgets.QMainWindow):
 
     # Connects Qt elements to action methods
     def __set_connect(self):
-        self.action_about.triggered.connect(self.__close_app)
         self.button_browse_files.clicked.connect(self.__browse_files)
         self.button_browse_log.clicked.connect(self.__browse_log)
         self.text_path.textChanged.connect(self.__toggle_create_stop)
@@ -30,6 +38,10 @@ class Ui(QtWidgets.QMainWindow):
         self.button_create_stop.clicked.connect(self.__create_stop_clicked)
         self.button_close_quit.clicked.connect(self.__close_app)
         self.checkbox_savelog.stateChanged.connect(self.__switch_log_options)
+        self.action_about.triggered.connect(self.__about_action)
+
+    def __about_action(self):
+        About()
 
     # Enables create button when all fields have values
     def __toggle_create_stop(self):
