@@ -185,24 +185,27 @@
           <rect>
            <x>0</x>
            <y>20</y>
-           <width>510</width>
+           <width>505</width>
            <height>20</height>
           </rect>
          </property>
          <property name="minimumSize">
           <size>
-           <width>510</width>
+           <width>505</width>
            <height>20</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>510</width>
+           <width>505</width>
            <height>20</height>
           </size>
          </property>
          <property name="value">
           <number>0</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
         <widget class="QLabel" name="label_progress">
@@ -718,6 +721,21 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>text_path</tabstop>
+  <tabstop>button_browse_files</tabstop>
+  <tabstop>text_n_files</tabstop>
+  <tabstop>text_size_files</tabstop>
+  <tabstop>combo_file_unit</tabstop>
+  <tabstop>checkbox_debug</tabstop>
+  <tabstop>text_chunk_size</tabstop>
+  <tabstop>combo_chunk_unit</tabstop>
+  <tabstop>checkbox_savelog</tabstop>
+  <tabstop>text_logfilepath</tabstop>
+  <tabstop>button_browse_log</tabstop>
+  <tabstop>button_create_stop</tabstop>
+  <tabstop>button_close_quit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
