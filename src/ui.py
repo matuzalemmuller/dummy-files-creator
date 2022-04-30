@@ -1,12 +1,12 @@
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5 import QtGui
-from PyQt5 import QtCore
+from PyQt5 import uic
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow
 from files_creator import FilesCreator
 import sys
 
 
-class About(QtWidgets.QDialog):
+class About(QDialog):
     def __init__(self):
         super(About, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi("../lib/qt/About.ui", self)  # Load the .ui file
@@ -14,7 +14,7 @@ class About(QtWidgets.QDialog):
         self.activateWindow()
 
 
-class Ui(QtWidgets.QMainWindow):
+class Ui(QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi("../lib/qt/MainWindow.ui", self)  # Load the .ui file
@@ -25,8 +25,8 @@ class Ui(QtWidgets.QMainWindow):
         self.__set_validator()
         self.__set_connect()
         self.__switch_log_options()
-        self.__switch_progress_bar()
         self.__toggle_create_stop()
+        self.__change_ui("enabled")
         self.show()  # Show the GUI
 
     def __about_action(self):
@@ -47,8 +47,8 @@ class Ui(QtWidgets.QMainWindow):
 
     # Set validator for number-exclusive fields
     def __set_validator(self):
-        number_regex = QtCore.QRegExp("[0-9]+")
-        number_validator = QtGui.QRegExpValidator(number_regex)
+        number_regex = QRegExp("[0-9]+")
+        number_validator = QRegExpValidator(number_regex)
         self.text_n_files.setValidator(number_validator)
         self.text_size_files.setValidator(number_validator)
         self.text_chunk_size.setValidator(number_validator)
@@ -67,10 +67,8 @@ class Ui(QtWidgets.QMainWindow):
 
     # Open native folder dialog to select where test files will be created
     def __browse_files(self):
-        dialog = QtWidgets.QFileDialog()
-        path = str(
-            QtWidgets.QFileDialog.getExistingDirectory(dialog, "Select Directory")
-        )
+        dialog = QFileDialog()
+        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
         self.text_path.setText(path)
 
     # Show/hide log folder text field
@@ -82,10 +80,8 @@ class Ui(QtWidgets.QMainWindow):
 
     # Open native folder dialog to select where log file will be saved
     def __browse_log(self):
-        dialog = QtWidgets.QFileDialog()
-        path = str(
-            QtWidgets.QFileDialog.getExistingDirectory(dialog, "Select Directory")
-        )
+        dialog = QFileDialog()
+        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
         self.text_logfilepath.setText(path)
 
     # Action to button Stop
@@ -140,13 +136,6 @@ class Ui(QtWidgets.QMainWindow):
             # self.__cancel_creation()
             self.__change_ui(state="enabled")
 
-    # Show/hide file creation progress bar
-    def __switch_progress_bar(self):
-        if self.__creating_files:
-            self.widget_progress_bar.show()
-        else:
-            self.widget_progress_bar.hide()
-
     def __update_progress_bar(self):
         progress_bar_text = str(self.__created_files) + "/" + str(self.__total_files)
         progress_bar_percent = int(self.__created_files * 100 / self.__total_files)
@@ -174,6 +163,8 @@ class Ui(QtWidgets.QMainWindow):
             self.button_create_stop.setText("Stop")
             self.button_close_quit.setText("Quit")
             self.widget_progress_bar.show()
+            if self.checkbox_debug.isChecked():
+                self.widget_debug.show()
         else:
             self.label_path.setDisabled(False)
             self.label_n_files.setDisabled(False)
@@ -193,12 +184,15 @@ class Ui(QtWidgets.QMainWindow):
             self.button_create_stop.setText("Create")
             self.button_close_quit.setText("Close")
             self.widget_progress_bar.hide()
+            self.widget_debug.hide()
         return
 
+
 def main():
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = Ui()
     app.exec_()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()

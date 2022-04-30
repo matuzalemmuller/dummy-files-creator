@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>530</width>
-    <height>270</height>
+    <height>330</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>530</width>
-    <height>270</height>
+    <height>330</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>530</width>
-    <height>270</height>
+    <height>330</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -44,25 +44,49 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="widget_window">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>530</width>
+     <height>320</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>530</width>
+     <height>320</height>
+    </size>
+   </property>
    <widget class="QWidget" name="widget_main" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
       <width>510</width>
-      <height>260</height>
+      <height>280</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="minimumSize">
      <size>
       <width>510</width>
-      <height>260</height>
+      <height>280</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
       <width>510</width>
-      <height>260</height>
+      <height>280</height>
      </size>
     </property>
     <widget class="QWidget" name="gridLayoutWidget">
@@ -71,240 +95,65 @@
        <x>0</x>
        <y>0</y>
        <width>514</width>
-       <height>224</height>
+       <height>278</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="layout_main" rowstretch="0,0,0,0,0,0,0" columnstretch="0,0,0">
+     <layout class="QGridLayout" name="layout_main" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,0">
       <property name="horizontalSpacing">
        <number>0</number>
       </property>
       <property name="verticalSpacing">
        <number>2</number>
       </property>
-      <item row="0" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QPushButton" name="button_browse_files">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="text_n_files">
         <property name="minimumSize">
          <size>
-          <width>80</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="label_size_files">
-        <property name="minimumSize">
-         <size>
-          <width>70</width>
+          <width>300</width>
           <height>23</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>70</width>
+          <width>300</width>
+          <height>23</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="text_path">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>23</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="label_path">
+        <property name="minimumSize">
+         <size>
+          <width>85</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>85</width>
           <height>23</height>
          </size>
         </property>
         <property name="text">
-         <string>Size of Files</string>
+         <string>Save to Folder</string>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <layout class="QHBoxLayout" name="layout_file_unit">
-        <item>
-         <widget class="QComboBox" name="combo_file_unit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="currentIndex">
-           <number>1</number>
-          </property>
-          <property name="frame">
-           <bool>true</bool>
-          </property>
-          <item>
-           <property name="text">
-            <string>KiB</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>MiB</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>GiB</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="6" column="0" colspan="3">
-       <widget class="QWidget" name="widget_progress_bar" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>510</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>510</width>
-          <height>50</height>
-         </size>
-        </property>
-        <widget class="QProgressBar" name="progress_bar">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>20</y>
-           <width>505</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>505</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>505</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_progress">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>510</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>510</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>0/0</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="3">
-       <widget class="QWidget" name="widget_buttons" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>510</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>510</width>
-          <height>30</height>
-         </size>
-        </property>
-        <widget class="QWidget" name="layoutWidget">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>512</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <layout class="QHBoxLayout" name="layout_button">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="button_create_stop">
-            <property name="minimumSize">
-             <size>
-              <width>80</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Create</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="button_close_quit">
-            <property name="minimumSize">
-             <size>
-              <width>80</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Close</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
@@ -476,22 +325,6 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="text_n_files">
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>300</width>
-          <height>23</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QLineEdit" name="text_size_files">
         <property name="maximumSize">
@@ -500,6 +333,154 @@
           <height>23</height>
          </size>
         </property>
+       </widget>
+      </item>
+      <item row="0" column="2" alignment="Qt::AlignHCenter">
+       <widget class="QPushButton" name="button_browse_files">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <layout class="QHBoxLayout" name="layout_file_unit">
+        <item>
+         <widget class="QComboBox" name="combo_file_unit">
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>KiB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MiB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>GiB</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="label_size_files">
+        <property name="minimumSize">
+         <size>
+          <width>70</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>70</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Size of Files</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
+       <widget class="QWidget" name="widget_buttons" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>510</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>510</width>
+          <height>30</height>
+         </size>
+        </property>
+        <widget class="QWidget" name="layoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>512</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <layout class="QHBoxLayout" name="layout_button">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="button_create_stop">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Create</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_close_quit">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Close</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
       <item row="1" column="0">
@@ -521,39 +502,82 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="text_path">
+      <item row="6" column="0" colspan="3">
+       <widget class="QWidget" name="widget_progress_bar" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>300</width>
-          <height>23</height>
+          <width>510</width>
+          <height>50</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>300</width>
-          <height>23</height>
+          <width>510</width>
+          <height>50</height>
          </size>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="0" alignment="Qt::AlignLeft">
-       <widget class="QLabel" name="label_path">
-        <property name="minimumSize">
-         <size>
-          <width>85</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>85</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Save to Folder</string>
-        </property>
+        <widget class="QProgressBar" name="progress_bar">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>20</y>
+           <width>505</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>505</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>505</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_progress">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>510</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>510</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>0/0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </widget>
       </item>
       <item row="4" column="0" colspan="3">
@@ -686,6 +710,94 @@
                </size>
               </property>
              </spacer>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="7" column="0" colspan="3">
+       <layout class="QHBoxLayout" name="layout_debug">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QWidget" name="widget_debug" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>510</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>510</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>512</width>
+             <height>51</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="layout_debug_vert">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_debug_information">
+              <property name="minimumSize">
+               <size>
+                <width>510</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>510</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Debug information</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progress_bar_debug">
+              <property name="minimumSize">
+               <size>
+                <width>505</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>505</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
