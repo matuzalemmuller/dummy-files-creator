@@ -1,19 +1,13 @@
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 import os
 import math
 import uuid
+import threading
 import time
 
-# Exceptions:
-# * Ao criar os arquivos (automatico)
-# * Ao criar o arquivo de log (automatico)
-# * Ao validar as unidades
 
-
-class FilesCreator(QObject):
-    update_progress = pyqtSignal(int, int, str, int, int)
-
-    def __init__(self,
+class FilesCreator(threading.Thread):
+    def __init__(
+        self,
         folder_path: str,
         number_files: int,
         size_file: int,
@@ -22,12 +16,16 @@ class FilesCreator(QObject):
         chunk_unit: str,
         debug: bool = None,
         log_path: str = None,
+        complete_function=None,
+        update_function=None,
     ):
         super().__init__()
         self.folder_path = folder_path
         self.number_files = number_files
         self.debug = debug
-        # self.log_path = log_path
+        self.update_function = update_function
+        self.complete_function = complete_function
+        self.abort = False
 
         if size_unit == "KiB":
             size_mult = 1
@@ -56,27 +54,29 @@ class FilesCreator(QObject):
             self.chunk_size_bytes = self.file_size_bytes
             self.number_of_chunks = 1
         else:
-            self.number_of_chunks = math.ceil(self.file_size_bytes / self.chunk_size_bytes)
+            self.number_of_chunks = math.ceil(
+                self.file_size_bytes / self.chunk_size_bytes
+            )
 
-    @pyqtSlot()
-    def create_files(self):
-        for n_created in range(1, self.number_files+1):
+    def run(self):
+        for n_created in range(1, self.number_files + 1):
             file_name = str(uuid.uuid4()) + ".dummy"
             try:
                 with open(self.folder_path + "/" + file_name, "wb") as fout:
                     if self.debug:
-                        for chunk_n in range(1, self.number_of_chunks+1):
+                        for chunk_n in range(1, self.number_of_chunks + 1):
                             if self.abort == True:
                                 os.remove(self.folder_path + "/" + file_name)
                                 return
                             fout.write(os.urandom(self.chunk_size_bytes))
-                            self.update_progress.emit(
-                                n_created,
-                                self.number_files,
-                                file_name,
-                                chunk_n,
-                                self.number_of_chunks,
-                            )
+                            if self.update_function:
+                                self.update_function(
+                                    n_created,
+                                    self.number_files,
+                                    file_name,
+                                    chunk_n,
+                                    self.number_of_chunks,
+                                )
                     else:
                         for chunk_n in range(self.number_of_chunks):
                             if self.abort == True:
@@ -87,8 +87,16 @@ class FilesCreator(QObject):
                 print(e)
                 return
             time.sleep(1)
-        self.update_progress.emit(n_created, self.number_files, file_name, 1, 1)
-        return True
+            if self.abort == True:
+                return
+            else:
+                if self.update_function:
+                    self.update_function(n_created, self.number_files, file_name, 1, 1)
 
-    def abort(self):
+        if self.complete_function:
+            self.complete_function()
+
+        return
+
+    def kill(self):
         self.abort = True
