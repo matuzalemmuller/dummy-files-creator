@@ -18,6 +18,7 @@ class FilesCreator(threading.Thread):
         log_path: str = None,
         complete_function=None,
         update_function=None,
+        error_function=None,
     ):
         super().__init__()
         self.folder_path = folder_path
@@ -25,6 +26,7 @@ class FilesCreator(threading.Thread):
         self.debug = debug
         self.update_function = update_function
         self.complete_function = complete_function
+        self.error_function = error_function
         self.abort = False
 
         if size_unit == "KiB":
@@ -85,6 +87,7 @@ class FilesCreator(threading.Thread):
                             fout.write(os.urandom(self.chunk_size_bytes))
             except IOError as e:
                 print(e)
+                self.error_function(str(e))
                 return
             time.sleep(1)
             if self.abort == True:

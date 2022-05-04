@@ -17,6 +17,7 @@ class About(QDialog):
 
 class Ui(QMainWindow):
     signal_update_progress = pyqtSignal(int, int, str, int, int)
+    signal_error = pyqtSignal(str)
     signal_complete = pyqtSignal()
 
     def __init__(self):
@@ -24,42 +25,42 @@ class Ui(QMainWindow):
         uic.loadUi("../lib/qt/MainWindow.ui", self)  # Load the .ui file
         self.__creator_thread = None
         # Initialize UI elements
-        self.__set_validator()
+        self.__set_number_validator()
         self.__set_connect()
-        self.__toggle_widget_log()
-        self.__button_toggle_create_stop()
+        self.__enable_create_button()
         self.__change_ui("enabled")
-        self.signal_update_progress.connect(self.__progress_bar_update)
-        self.signal_complete.connect(self.__creation_complete)
         self.show()  # Show the GUI
 
     def __about_action(self):
         About()
 
     def __set_connect(self):
-        self.button_browse_files.clicked.connect(self.__button_browse_files)
-        self.button_browse_log.clicked.connect(self.__button_browse_log)
-        self.text_path.textChanged.connect(self.__button_toggle_create_stop)
-        self.text_n_files.textChanged.connect(self.__button_toggle_create_stop)
-        self.text_size_files.textChanged.connect(self.__button_toggle_create_stop)
-        self.text_chunk_size.textChanged.connect(self.__button_toggle_create_stop)
-        self.button_create_stop.clicked.connect(self.__button_create_stop_clicked)
-        self.button_close_quit.clicked.connect(self.__button_close)
-        self.checkbox_savelog.stateChanged.connect(self.__toggle_widget_log)
+        self.button_browse_files.clicked.connect(self.__click_button_browse_files)
+        self.button_browse_log.clicked.connect(self.__click_button_browse_log)
+        self.text_path.textChanged.connect(self.__enable_create_button)
+        self.text_n_files.textChanged.connect(self.__enable_create_button)
+        self.text_size_files.textChanged.connect(self.__enable_create_button)
+        self.text_chunk_size.textChanged.connect(self.__enable_create_button)
+        self.button_create_stop.clicked.connect(self.__click_button_create_stop)
+        self.button_close_quit.clicked.connect(self.__click_button_close_quit)
+        self.checkbox_savelog.stateChanged.connect(self.__hide_widget_log_options)
         self.action_about.triggered.connect(self.__about_action)
-        self.text_path.returnPressed.connect(self.__button_create_stop_clicked)
-        self.text_n_files.returnPressed.connect(self.__button_create_stop_clicked)
-        self.text_size_files.returnPressed.connect(self.__button_create_stop_clicked)
-        self.text_chunk_size.returnPressed.connect(self.__button_create_stop_clicked)
+        self.text_path.returnPressed.connect(self.__click_button_create_stop)
+        self.text_n_files.returnPressed.connect(self.__click_button_create_stop)
+        self.text_size_files.returnPressed.connect(self.__click_button_create_stop)
+        self.text_chunk_size.returnPressed.connect(self.__click_button_create_stop)
+        self.signal_update_progress.connect(self.__update_progress_bar)
+        self.signal_complete.connect(self.__display_success_message)
+        self.signal_error.connect(self.__display_error_message)
 
-    def __set_validator(self):
+    def __set_number_validator(self):
         number_regex = QRegExp("[0-9]+")
         number_validator = QRegExpValidator(number_regex)
         self.text_n_files.setValidator(number_validator)
         self.text_size_files.setValidator(number_validator)
         self.text_chunk_size.setValidator(number_validator)
 
-    def __button_toggle_create_stop(self):
+    def __enable_create_button(self):
         if (
             len(self.text_path.text()) > 0
             and len(self.text_n_files.text()) > 0
@@ -70,48 +71,8 @@ class Ui(QMainWindow):
         else:
             self.button_create_stop.setDisabled(True)
 
-    def __button_browse_files(self):
-        dialog = QFileDialog()
-        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
-        self.text_path.setText(path)
-
-    def __toggle_widget_log(self):
-        if self.checkbox_savelog.isChecked():
-            self.widget_log.show()
-        else:
-            self.widget_log.hide()
-
-    def __button_browse_log(self):
-        dialog = QFileDialog()
-        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
-        self.text_logfilepath.setText(path)
-
-    def __button_cancel(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setWindowTitle("Confirmation")
-        msg.setText("Are you sure?")
-        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        cancel_code = msg.exec_()
-        if cancel_code == QMessageBox.Yes:
-            self._change_layout("Stopped")
-
-    def __button_close(self):
-        if self.button_close_quit.text() == "Quit":
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Information)
-            msg.setWindowTitle("Quit")
-            msg.setText("Are you sure you want to quit?")
-            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            quit_code = msg.exec_()
-            if quit_code == QMessageBox.Yes:
-                self.__creator_thread.kill()
-                sys.exit(0)
-        else:
-            sys.exit(0)
-
     @pyqtSlot(int, int, str, int, int)
-    def __progress_bar_update(
+    def __update_progress_bar(
         self,
         created_files: int,
         total_files: int,
@@ -129,6 +90,28 @@ class Ui(QMainWindow):
             self.label_debug_information.setText(debug_bar)
             self.progress_bar_debug.setValue(debug_percent)
 
+    @pyqtSlot(str)
+    def __display_error_message(self, error_message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setWindowTitle("Error")
+        msg.setText("Error")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setDetailedText(error_message)
+        msg.exec_()
+        self.__change_ui("enabled")
+
+    @pyqtSlot()
+    def __display_success_message(self):
+        self.__change_ui(state="enabled")
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Success")
+        msg.setText("Success")
+        msg.setInformativeText("Files created!")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+
     def emit_progress_bar_update(
         self,
         n_created: int,
@@ -141,21 +124,37 @@ class Ui(QMainWindow):
             n_created, number_files, file_name, chunk_n, number_of_chunks
         )
 
-    @pyqtSlot()
-    def __creation_complete(self):
-        self.__change_ui(state="enabled")
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setWindowTitle("Success")
-        msg.setText("Success")
-        msg.setInformativeText("Files created!")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
+    def emit_error_window(self, error_message):
+        self.signal_error.emit(error_message)
 
-    def emit_complete(self):
+    def emit_display_success_message(self):
         self.signal_complete.emit()
 
-    def __button_create_stop_clicked(self):
+    def __click_button_browse_files(self):
+        dialog = QFileDialog()
+        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
+        self.text_path.setText(path)
+
+    def __click_button_browse_log(self):
+        dialog = QFileDialog()
+        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
+        self.text_logfilepath.setText(path)
+
+    def __click_button_close_quit(self):
+        if self.button_close_quit.text() == "Quit":
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setWindowTitle("Quit")
+            msg.setText("Are you sure you want to quit?")
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            quit_code = msg.exec_()
+            if quit_code == QMessageBox.Yes:
+                self.__creator_thread.kill()
+                sys.exit(0)
+        else:
+            sys.exit(0)
+
+    def __click_button_create_stop(self):
         if (
             len(self.text_path.text()) <= 0
             or len(self.text_n_files.text()) <= 0
@@ -187,7 +186,8 @@ class Ui(QMainWindow):
                 debug=debug,
                 log_path=log_path,
                 update_function=self.emit_progress_bar_update,
-                complete_function=self.emit_complete,
+                complete_function=self.emit_display_success_message,
+                error_function=self.emit_error_window,
             )
             self.__creator_thread.start()
         else:
@@ -224,6 +224,10 @@ class Ui(QMainWindow):
             self.widget_progress_bar.show()
             if self.checkbox_debug.isChecked():
                 self.widget_debug.show()
+            if self.checkbox_savelog.isChecked():
+                self.widget_log.show()
+            else:
+                self.widget_log.hide()
         else:
             self.label_path.setDisabled(False)
             self.label_n_files.setDisabled(False)
@@ -248,6 +252,10 @@ class Ui(QMainWindow):
             self.label_progress.setText("0/0")
             self.widget_progress_bar.hide()
             self.widget_debug.hide()
+            if self.checkbox_savelog.isChecked():
+                self.widget_log.show()
+            else:
+                self.widget_log.hide()
         return
 
 
