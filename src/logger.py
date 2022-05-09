@@ -1,11 +1,7 @@
-# https://betterprogramming.pub/easily-add-custom-attributes-to-logrecord-objects-in-python-31dae85592b1
-
 import logging
 from logging.handlers import RotatingFileHandler
 import csv
 import io
-
-file_size = "10MB"
 
 
 class CsvFormatter(logging.Formatter):
@@ -45,13 +41,9 @@ class Logger:
             delay=0,
         )
         log_handler.setFormatter(csv_format)
-
         self.logger.addHandler(log_handler)
 
-    def log(self, file_name):
-        self.logger.debug(file_name)
-
-
-test = Logger("/home/matuzalem/dev/dummy-files-creator/dummy-files-creator.csv")
-file_size = "2MB"
-test.log("a")
+    def log(self, f_path, f_size):
+        global file_size
+        file_size = f_size
+        self.logger.debug(f_path)
