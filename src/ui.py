@@ -1,10 +1,10 @@
+#! /usr/bin/env python3
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QRegExp
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
 from files_creator import FilesCreator
 import sys
-import threading
 
 
 class About(QDialog):
@@ -130,6 +130,12 @@ class Ui(QMainWindow):
     def emit_display_success_message(self):
         self.signal_complete.emit()
 
+    def __hide_widget_log_options(self):
+        if self.checkbox_savelog.isChecked():
+            self.widget_log.show()
+        else:
+            self.widget_log.hide()
+
     def __click_button_browse_files(self):
         dialog = QFileDialog()
         path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
@@ -167,7 +173,6 @@ class Ui(QMainWindow):
         ):
             return
         elif self.button_create_stop.text() == "Create":
-            self.__change_ui(state="disabled")
             folder_path = self.text_path.text()
             number_files = int(self.text_n_files.text())
             size_file = int(self.text_size_files.text())
@@ -175,21 +180,29 @@ class Ui(QMainWindow):
             chunk_size = int(self.text_chunk_size.text())
             chunk_unit = self.combo_chunk_unit.currentText()
             debug = self.checkbox_debug.isChecked()
-            log_path = self.text_logfilepath.text()
-            self.__creator_thread = FilesCreator(
-                folder_path=folder_path,
-                number_files=number_files,
-                size_file=size_file,
-                size_unit=size_unit,
-                chunk_size=chunk_size,
-                chunk_unit=chunk_unit,
-                debug=debug,
-                log_path=log_path,
-                update_function=self.emit_progress_bar_update,
-                complete_function=self.emit_display_success_message,
-                error_function=self.emit_error_window,
-            )
-            self.__creator_thread.start()
+            if self.checkbox_savelog.isChecked():
+                log_path = self.text_logfilepath.text()
+            else:
+                log_path = None
+            try:
+                self.__creator_thread = FilesCreator(
+                    folder_path=folder_path,
+                    number_files=number_files,
+                    size_file=size_file,
+                    size_unit=size_unit,
+                    chunk_size=chunk_size,
+                    chunk_unit=chunk_unit,
+                    debug=debug,
+                    log_path=log_path,
+                    update_function=self.emit_progress_bar_update,
+                    complete_function=self.emit_display_success_message,
+                    error_function=self.emit_error_window,
+                )
+                self.__creator_thread.start()
+            except IOError as e:
+                print(e)
+                return
+            self.__change_ui(state="disabled")
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)

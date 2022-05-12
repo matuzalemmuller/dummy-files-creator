@@ -1,8 +1,9 @@
-import os
 import math
-import uuid
+import os
 import threading
 import time
+import uuid
+from logger import Logger
 
 
 class FilesCreator(threading.Thread):
@@ -24,8 +25,9 @@ class FilesCreator(threading.Thread):
         self.folder_path = folder_path
         self.number_files = number_files
         self.debug = debug
-        self.update_function = update_function
+        self.log_path = log_path
         self.complete_function = complete_function
+        self.update_function = update_function
         self.error_function = error_function
         self.abort = False
 
@@ -60,15 +62,26 @@ class FilesCreator(threading.Thread):
                 self.file_size_bytes / self.chunk_size_bytes
             )
 
+        if self.log_path:
+            self.readable_size = str(size_file) + size_unit
+            self.log_path = self.log_path + "/dummy-files-creator.csv"
+            try:
+                self.logger = Logger(self.log_path, self.error_function)
+            except IOError as e:
+                print(e)
+                self.error_function("Error saving log: " + str(e))
+                raise e
+
     def run(self):
         for n_created in range(1, self.number_files + 1):
             file_name = str(uuid.uuid4()) + ".dummy"
+            file_path = self.folder_path + "/" + file_name
             try:
-                with open(self.folder_path + "/" + file_name, "wb") as fout:
+                with open(file_path, "wb") as fout:
                     if self.debug:
                         for chunk_n in range(1, self.number_of_chunks + 1):
                             if self.abort == True:
-                                os.remove(self.folder_path + "/" + file_name)
+                                os.remove(file_path)
                                 return
                             fout.write(os.urandom(self.chunk_size_bytes))
                             if self.update_function:
@@ -82,12 +95,20 @@ class FilesCreator(threading.Thread):
                     else:
                         for chunk_n in range(self.number_of_chunks):
                             if self.abort == True:
-                                os.remove(self.folder_path + "/" + file_name)
+                                os.remove(file_path)
                                 return
                             fout.write(os.urandom(self.chunk_size_bytes))
+                    if self.log_path:
+                        try:
+                            self.logger.log(file_path, self.readable_size)
+                        except IOError as e:
+                            print(e)
+                            self.error_function("Error saving log: " + str(e))
+                            return
             except IOError as e:
                 print(e)
-                self.error_function(str(e))
+                if self.error_function:
+                    self.error_function("Error creating file: " + str(e))
                 return
             time.sleep(1)
             if self.abort == True:
