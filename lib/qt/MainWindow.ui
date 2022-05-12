@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>530</width>
-    <height>330</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>530</width>
-    <height>330</height>
+    <height>360</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>530</width>
-    <height>330</height>
+    <height>360</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -53,13 +53,13 @@
    <property name="minimumSize">
     <size>
      <width>530</width>
-     <height>320</height>
+     <height>350</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>530</width>
-     <height>320</height>
+     <height>350</height>
     </size>
    </property>
    <widget class="QWidget" name="widget_main" native="true">
@@ -68,7 +68,7 @@
       <x>10</x>
       <y>10</y>
       <width>510</width>
-      <height>280</height>
+      <height>320</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -80,13 +80,13 @@
     <property name="minimumSize">
      <size>
       <width>510</width>
-      <height>280</height>
+      <height>320</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
       <width>510</width>
-      <height>280</height>
+      <height>320</height>
      </size>
     </property>
     <widget class="QWidget" name="gridLayoutWidget">
@@ -95,7 +95,7 @@
        <x>0</x>
        <y>0</y>
        <width>514</width>
-       <height>278</height>
+       <height>318</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="layout_main" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,0">
@@ -590,13 +590,13 @@
           <property name="minimumSize">
            <size>
             <width>510</width>
-            <height>30</height>
+            <height>50</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
             <width>510</width>
-            <height>30</height>
+            <height>50</height>
            </size>
           </property>
           <widget class="QWidget" name="layoutWidget">
@@ -604,50 +604,12 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>546</width>
-             <height>30</height>
+             <width>511</width>
+             <height>54</height>
             </rect>
            </property>
-           <layout class="QHBoxLayout" name="layout_log_internal">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_logfilepath">
-              <property name="minimumSize">
-               <size>
-                <width>85</width>
-                <height>23</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>85</width>
-                <height>23</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Log to Folder</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>26</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item alignment="Qt::AlignVCenter">
+           <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
+            <item row="0" column="1">
              <widget class="QLineEdit" name="text_logfilepath">
               <property name="minimumSize">
                <size>
@@ -663,23 +625,32 @@
               </property>
              </widget>
             </item>
-            <item>
-             <spacer name="horizontal_spacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="1" column="0" colspan="3" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+             <widget class="QCheckBox" name="checkbox_md5hash">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
+              <property name="minimumSize">
                <size>
-                <width>13</width>
-                <height>20</height>
+                <width>107</width>
+                <height>21</height>
                </size>
               </property>
-             </spacer>
+              <property name="maximumSize">
+               <size>
+                <width>107</width>
+                <height>21</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Save md5 hash</string>
+              </property>
+             </widget>
             </item>
-            <item alignment="Qt::AlignRight">
+            <item row="0" column="2">
              <widget class="QPushButton" name="button_browse_log">
               <property name="minimumSize">
                <size>
@@ -698,18 +669,24 @@
               </property>
              </widget>
             </item>
-            <item>
-             <spacer name="horizontal_spacer_6">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_logfilepath">
+              <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>20</height>
+                <width>85</width>
+                <height>23</height>
                </size>
               </property>
-             </spacer>
+              <property name="maximumSize">
+               <size>
+                <width>85</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Log to Folder</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -845,6 +822,7 @@
   <tabstop>checkbox_savelog</tabstop>
   <tabstop>text_logfilepath</tabstop>
   <tabstop>button_browse_log</tabstop>
+  <tabstop>checkbox_md5hash</tabstop>
   <tabstop>button_create_stop</tabstop>
   <tabstop>button_close_quit</tabstop>
  </tabstops>

@@ -13,7 +13,9 @@ class CsvFormatter(logging.Formatter):
         self.writer = csv.writer(self.output, quoting=csv.QUOTE_ALL)
 
     def format(self, record):
-        self.writer.writerow([datetime.datetime.now(), record.msg, record.file_size])
+        self.writer.writerow(
+            [datetime.datetime.now(), record.file_size, record.msg, record.hash]
+        )
         data = self.output.getvalue()
         self.output.truncate(0)
         self.output.seek(0)
@@ -24,6 +26,8 @@ class CustomFilter(logging.Filter):
     def filter(self, record):
         global file_size
         record.file_size = file_size
+        global hash
+        record.hash = hash
         return True
 
 
@@ -34,16 +38,26 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
         self.logger.addFilter(CustomFilter())
 
-        log_handler = RotatingFileHandler(
-            log_path,
-            mode="w",
-            delay=0,
-        )
-        csv_format = CsvFormatter()
-        log_handler.setFormatter(csv_format)
-        self.logger.addHandler(log_handler)
+        try:
+            log_handler = RotatingFileHandler(
+                log_path,
+                mode="a",
+                delay=0,
+            )
+            csv_format = CsvFormatter()
+            log_handler.setFormatter(csv_format)
+            self.logger.addHandler(log_handler)
+        except IOError as e:
+            print("Logger: Error creating object: " + str(e))
+            raise e
 
-    def log(self, f_path, f_size):
+    def log(self, f_path, f_size, f_hash=None):
         global file_size
         file_size = f_size
-        self.logger.info(f_path)
+        global hash
+        hash = f_hash
+        try:
+            self.logger.info(f_path)
+        except IOError as e:
+            print("Logger: Error saving log entry: " + str(e))
+            raise e

@@ -1,3 +1,4 @@
+import hashlib
 import math
 import os
 import threading
@@ -17,6 +18,7 @@ class FilesCreator(threading.Thread):
         chunk_unit: str,
         debug: bool = None,
         log_path: str = None,
+        log_hash: bool = None,
         complete_function=None,
         update_function=None,
         error_function=None,
@@ -26,6 +28,7 @@ class FilesCreator(threading.Thread):
         self.number_files = number_files
         self.debug = debug
         self.log_path = log_path
+        self.log_hash = log_hash
         self.complete_function = complete_function
         self.update_function = update_function
         self.error_function = error_function
@@ -64,12 +67,15 @@ class FilesCreator(threading.Thread):
 
         if self.log_path:
             self.readable_size = str(size_file) + size_unit
-            self.log_path = self.log_path + "/dummy-files-creator.csv"
+            if self.log_path[-1] != "/":
+                self.log_path = self.log_path + "/dummy-files-creator.csv"
+            else:
+                self.log_path = self.log_path + "dummy-files-creator.csv"
             try:
                 self.logger = Logger(self.log_path, self.error_function)
             except IOError as e:
-                print(e)
-                self.error_function("Error saving log: " + str(e))
+                print("FilesCreator: Error creating Logger: " + str(e))
+                self.error_function("Error saving log file: " + str(e))
                 raise e
 
     def run(self):
@@ -82,7 +88,7 @@ class FilesCreator(threading.Thread):
                         for chunk_n in range(1, self.number_of_chunks + 1):
                             if self.abort == True:
                                 os.remove(file_path)
-                                return
+                                return False
                             fout.write(os.urandom(self.chunk_size_bytes))
                             if self.update_function:
                                 self.update_function(
@@ -96,23 +102,29 @@ class FilesCreator(threading.Thread):
                         for chunk_n in range(self.number_of_chunks):
                             if self.abort == True:
                                 os.remove(file_path)
-                                return
+                                return False
                             fout.write(os.urandom(self.chunk_size_bytes))
-                    if self.log_path:
-                        try:
-                            self.logger.log(file_path, self.readable_size)
-                        except IOError as e:
-                            print(e)
-                            self.error_function("Error saving log: " + str(e))
-                            return
             except IOError as e:
                 print(e)
                 if self.error_function:
                     self.error_function("Error creating file: " + str(e))
-                return
+                return False
+            if self.log_path:
+                try:
+                    with open(file_path, "rb") as fout:
+                        if self.log_hash:
+                            bytes = fout.read()
+                            hash_result = hashlib.md5(bytes).hexdigest()
+                            self.logger.log(file_path, self.readable_size, hash_result)
+                        else:
+                            self.logger.log(file_path, self.readable_size, "")
+                except IOError as e:
+                    print("Files Creator: error logging entry: " + str(e))
+                    self.error_function("Error saving log: " + str(e))
+                    return False
             time.sleep(1)
             if self.abort == True:
-                return
+                return False
             else:
                 if self.update_function:
                     self.update_function(n_created, self.number_files, file_name, 1, 1)
@@ -120,7 +132,7 @@ class FilesCreator(threading.Thread):
         if self.complete_function:
             self.complete_function()
 
-        return
+        return True
 
     def kill(self):
         self.abort = True

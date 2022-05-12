@@ -1,10 +1,10 @@
 #! /usr/bin/env python3
+import sys
+from files_creator import FilesCreator
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QRegExp
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
-from files_creator import FilesCreator
-import sys
 
 
 class About(QDialog):
@@ -180,6 +180,7 @@ class Ui(QMainWindow):
             chunk_size = int(self.text_chunk_size.text())
             chunk_unit = self.combo_chunk_unit.currentText()
             debug = self.checkbox_debug.isChecked()
+            log_hash = self.checkbox_md5hash.isChecked()
             if self.checkbox_savelog.isChecked():
                 log_path = self.text_logfilepath.text()
             else:
@@ -194,13 +195,14 @@ class Ui(QMainWindow):
                     chunk_unit=chunk_unit,
                     debug=debug,
                     log_path=log_path,
+                    log_hash=log_hash,
                     update_function=self.emit_progress_bar_update,
                     complete_function=self.emit_display_success_message,
                     error_function=self.emit_error_window,
                 )
                 self.__creator_thread.start()
             except IOError as e:
-                print(e)
+                print("UI: Error starting FilesCreator thread: " + str(e))
                 return
             self.__change_ui(state="disabled")
         else:
@@ -230,6 +232,7 @@ class Ui(QMainWindow):
             self.button_browse_log.setDisabled(True)
             self.checkbox_debug.setDisabled(True)
             self.checkbox_savelog.setDisabled(True)
+            self.checkbox_md5hash.setDisabled(True)
             self.combo_file_unit.setDisabled(True)
             self.combo_chunk_unit.setDisabled(True)
             self.button_create_stop.setText("Stop")
@@ -256,6 +259,7 @@ class Ui(QMainWindow):
             self.button_browse_log.setDisabled(False)
             self.checkbox_debug.setDisabled(False)
             self.checkbox_savelog.setDisabled(False)
+            self.checkbox_md5hash.setDisabled(False)
             self.combo_file_unit.setDisabled(False)
             self.combo_chunk_unit.setDisabled(False)
             self.button_create_stop.setText("Create")
