@@ -4,7 +4,7 @@ import os
 import threading
 import time
 import uuid
-from logger import Logger
+from .logger import Logger
 
 
 class FilesCreator(threading.Thread):

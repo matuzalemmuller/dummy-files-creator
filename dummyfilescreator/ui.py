@@ -1,16 +1,16 @@
 #! /usr/bin/env python3
 import sys
-from files_creator import FilesCreator
+from .files_creator import FilesCreator
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QRegExp
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMainWindow, QMessageBox
 
 
 class About(QDialog):
     def __init__(self):
         super(About, self).__init__()  # Call the inherited classes __init__ method
-        uic.loadUi("../lib/qt/About.ui", self)  # Load the .ui file
+        uic.loadUi("./lib/qt/About.ui", self)  # Load the .ui file
         self.exec_()
         self.activateWindow()
 
@@ -22,7 +22,7 @@ class Ui(QMainWindow):
 
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
-        uic.loadUi("../lib/qt/MainWindow.ui", self)  # Load the .ui file
+        uic.loadUi("./lib/qt/MainWindow.ui", self)  # Load the .ui file
         self.__creator_thread = None
         # Initialize UI elements
         self.__set_number_validator()
@@ -274,7 +274,6 @@ class Ui(QMainWindow):
             else:
                 self.widget_log.hide()
         return
-
 
 def main():
     app = QApplication(sys.argv)
