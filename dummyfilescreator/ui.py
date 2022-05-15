@@ -1,9 +1,10 @@
 #! /usr/bin/env python3
 import sys
 from .files_creator import FilesCreator
+from . import icon_qt
 from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QRegExp
-from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QDialog, QFileDialog, QMainWindow, QMessageBox
 
 
@@ -23,6 +24,7 @@ class Ui(QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi("./lib/qt/MainWindow.ui", self)  # Load the .ui file
+        self.setWindowIcon(QIcon(':/icon.png'))
         self.__creator_thread = None
         # Initialize UI elements
         self.__set_number_validator()
