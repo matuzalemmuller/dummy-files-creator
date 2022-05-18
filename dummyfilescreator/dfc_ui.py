@@ -5,7 +5,7 @@ from .files_creator import FilesCreator
 from .ui_main_window import UiMainWindow
 from .ui_about import UiAbout
 from PyQt5 import uic
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QThread, QRegExp
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
 
@@ -106,7 +106,6 @@ class DFCUi(QMainWindow):
                 or not (self.main_window.checkbox_savelog.isChecked())
             )
         ):
-            print(len(self.main_window.text_logfilepath.text()))
             self.main_window.button_create_stop.setDisabled(False)
         else:
             self.main_window.button_create_stop.setDisabled(True)
