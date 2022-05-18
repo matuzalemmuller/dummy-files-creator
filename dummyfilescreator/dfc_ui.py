@@ -5,7 +5,7 @@ from .files_creator import FilesCreator
 from .ui_main_window import UiMainWindow
 from .ui_about import UiAbout
 from PyQt5 import uic
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
 
@@ -15,6 +15,8 @@ class About(QDialog):
         super(About, self).__init__()
         self.about_window = UiAbout()
         self.about_window.setupUi(self)
+        self.setWindowIcon(QIcon(":/icon.png"))
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.exec_()
         self.activateWindow()
 
@@ -134,6 +136,7 @@ class DFCUi(QMainWindow):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setWindowTitle("Error")
+        msg.setWindowIcon(QIcon(":/icon.png"))
         msg.setText("Error")
         msg.setStandardButtons(QMessageBox.Ok)
         msg.setDetailedText(error_message)
@@ -146,6 +149,7 @@ class DFCUi(QMainWindow):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setWindowTitle("Success")
+        msg.setWindowIcon(QIcon(":/icon.png"))
         msg.setText("Success")
         msg.setInformativeText("Files created!")
         msg.setStandardButtons(QMessageBox.Ok)
