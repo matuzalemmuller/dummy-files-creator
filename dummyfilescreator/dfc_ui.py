@@ -55,6 +55,12 @@ class DFCUi(QMainWindow):
         self.main_window.text_chunk_size.textChanged.connect(
             self.__enable_create_button
         )
+        self.main_window.text_logfilepath.textChanged.connect(
+            self.__enable_create_button
+        )
+        self.main_window.checkbox_savelog.stateChanged.connect(
+            self.__enable_create_button
+        )
         self.main_window.button_create_stop.clicked.connect(
             self.__click_button_create_stop
         )
@@ -94,7 +100,13 @@ class DFCUi(QMainWindow):
             and len(self.main_window.text_n_files.text()) > 0
             and len(self.main_window.text_size_files.text()) > 0
             and len(self.main_window.text_chunk_size.text()) > 0
+            and (
+                self.main_window.checkbox_savelog.isChecked()
+                and len(self.main_window.text_logfilepath.text()) > 0
+                or not (self.main_window.checkbox_savelog.isChecked())
+            )
         ):
+            print(len(self.main_window.text_logfilepath.text()))
             self.main_window.button_create_stop.setDisabled(False)
         else:
             self.main_window.button_create_stop.setDisabled(True)
