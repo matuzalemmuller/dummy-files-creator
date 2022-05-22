@@ -122,7 +122,7 @@ class FilesCreator(threading.Thread):
                     print("Files Creator: error logging entry: " + str(e))
                     self.error_function("Error saving log: " + str(e))
                     return False
-            time.sleep(1)
+            # time.sleep(1) # used for debugging
             if self.abort == True:
                 return False
             else:

@@ -1,0 +1,12 @@
+Tutorial: https://www.pythonguis.com/tutorials/packaging-pyqt5-applications-linux-pyinstaller/
+
+Documentation: https://fpm.readthedocs.io/en/latest/cli-reference.html
+
+Steps:
+
+1. Install PyInstaller, ruby, fpm
+2. Build using pyinstaller spec
+3. Create local folders
+4. Copy files to folders
+5. Generate package using `fpm -C package -s dir -t deb -n "dummy-files-creator" -v $VERSION -p dummy-files-creator.deb`
+6. Add Makefile/python script for all steps

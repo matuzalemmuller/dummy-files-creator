@@ -4,7 +4,6 @@ from . import icon_qt
 from .files_creator import FilesCreator
 from .ui_main_window import UiMainWindow
 from .ui_about import UiAbout
-from PyQt5 import uic
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
