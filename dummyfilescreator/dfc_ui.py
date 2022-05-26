@@ -131,7 +131,7 @@ class DFCUi(QMainWindow):
             self.main_window.progress_bar_debug.setValue(debug_percent)
 
     @pyqtSlot(str)
-    def __display_error_message(self, error_message):
+    def __display_error_message(self, error_message: str):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setWindowTitle("Error")
@@ -166,7 +166,7 @@ class DFCUi(QMainWindow):
             n_created, number_files, file_name, chunk_n, number_of_chunks
         )
 
-    def emit_error_window(self, error_message):
+    def emit_error_window(self, error_message: str):
         self.signal_error.emit(error_message)
 
     def emit_display_success_message(self):

@@ -1,8 +1,8 @@
 import hashlib
 import math
 import os
-import threading
 import time
+import threading
 import uuid
 from .logger import Logger
 
@@ -39,9 +39,7 @@ class FilesCreator(threading.Thread):
         elif size_unit == "MiB":
             size_mult = 2
         elif size_unit == "GiB":
-            size_mult = 2
-        else:
-            return False
+            size_mult = 3
 
         if chunk_unit == "KiB":
             chunk_mult = 1
@@ -49,8 +47,6 @@ class FilesCreator(threading.Thread):
             chunk_mult = 2
         elif chunk_unit == "GiB":
             chunk_mult = 3
-        else:
-            return False
 
         # Converts both values to bytes
         self.file_size_bytes = math.ceil(size_file * (1024**size_mult))
@@ -74,8 +70,8 @@ class FilesCreator(threading.Thread):
             try:
                 self.logger = Logger(self.log_path, self.error_function)
             except IOError as e:
-                print("FilesCreator: Error creating Logger: " + str(e))
-                self.error_function("Error saving log file: " + str(e))
+                if self.error_function:
+                    self.error_function("Error saving log file: " + str(e))
                 raise e
 
     def run(self):
@@ -105,7 +101,6 @@ class FilesCreator(threading.Thread):
                                 return False
                             fout.write(os.urandom(self.chunk_size_bytes))
             except IOError as e:
-                print(e)
                 if self.error_function:
                     self.error_function("Error creating file: " + str(e))
                 return False
@@ -119,10 +114,10 @@ class FilesCreator(threading.Thread):
                         else:
                             self.logger.log(file_path, self.readable_size, "")
                 except IOError as e:
-                    print("Files Creator: error logging entry: " + str(e))
-                    self.error_function("Error saving log: " + str(e))
+                    if self.error_function:
+                        self.error_function("Error saving log: " + str(e))
                     return False
-            # time.sleep(1) # used for debugging
+            time.sleep(1)  # used for debugging
             if self.abort == True:
                 return False
             else:
