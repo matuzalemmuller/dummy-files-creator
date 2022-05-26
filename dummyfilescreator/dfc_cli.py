@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 class DFCCli:
     def __init__(self):
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(description='Application to generate dummy files')
         parser.add_argument(
             "--output", "-o", required=True, help="Location where files will be created"
         )
@@ -29,15 +29,29 @@ class DFCCli:
             required=False,
             help="Chunk size unit. Accepted values: KiB, MiB, GiB",
         )
-        parser.add_argument("--debug", "-d", required=False)
-        parser.add_argument("--log", "-l", required=False)
-        parser.add_argument("--hash", "-ha", required=False)
-
+        parser.add_argument(
+            "--debug",
+            "-d",
+            action="store_true",
+            required=False,
+            help="Print verbose output. Affects performance",
+        )
+        parser.add_argument(
+            "--log", "-l", required=False, help="Saves log file. Affects performance"
+        )
+        parser.add_argument(
+            "--hash",
+            "-ha",
+            action="store_true",
+            required=False,
+            help="Includes md5 hash in log file. Affects performance",
+        )
         args = vars(parser.parse_args())
 
         self.folder_path = str(args["output"])
         self.number_files = int(args["n_files"])
         self.size_file = int(args["size"])
+
         if args["unit"] == "KiB" or args["unit"] == "MiB" or args["unit"] == "GiB":
             self.size_unit = str(args["unit"])
         else:
@@ -67,21 +81,16 @@ class DFCCli:
             self.debug = bool(args["debug"])
         else:
             self.debug = None
+
         if args["log"] != None:
             self.log_path = str(args["log"])
         else:
             self.log_path = None
+
         if args["hash"] != None:
             self.log_hash = str(args["hash"])
         else:
             self.log_hash = None
-
-        self.files_creator = None
-
-        self.pbar_total = tqdm(range(self.number_files), unit=" files")
-
-        if self.debug:
-            self.pbar_file = tqdm(range(100), unit=" chunks")
 
     def print_progress(
         self,
@@ -98,10 +107,20 @@ class DFCCli:
             self.pbar_file.n = debug_percent
             self.pbar_file.set_description("%s" % file_name)
             self.pbar_file.refresh()
-
+ 
     def error_function(self, error_message: str):
-        print(error_message)
+        if hasattr(self, 'pbar_total'):
+            self.pbar_total.close()
+        if hasattr(self, 'pbar_file'):
+            self.pbar_file.close()
+        print("\r" + error_message)
         sys.exit(1)
+
+    def complete_function(self):
+        self.pbar_total.close()
+        if self.debug:
+            self.pbar_file.close()
+        print("\rFiles created")
 
     def run(self):
         try:
@@ -117,7 +136,13 @@ class DFCCli:
                 log_hash=self.log_hash,
                 update_function=self.print_progress,
                 error_function=self.error_function,
+                complete_function=self.complete_function,
             )
+
+            self.pbar_total = tqdm(range(self.number_files), unit=" files", leave=False)
+            if self.debug:
+                self.pbar_file = tqdm(range(100), unit=" chunks", leave=False)
+
             self.files_creator.start()
         except IOError as e:
             print("CLI: Error starting FilesCreator thread: " + str(e))

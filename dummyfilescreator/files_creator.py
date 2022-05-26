@@ -1,7 +1,7 @@
 import hashlib
 import math
 import os
-import time
+# import time # used for debugging
 import threading
 import uuid
 from .logger import Logger
@@ -117,7 +117,7 @@ class FilesCreator(threading.Thread):
                     if self.error_function:
                         self.error_function("Error saving log: " + str(e))
                     return False
-            time.sleep(1)  # used for debugging
+            # time.sleep(1)  # used for debugging
             if self.abort == True:
                 return False
             else:

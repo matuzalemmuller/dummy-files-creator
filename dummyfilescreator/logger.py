@@ -48,7 +48,6 @@ class Logger:
             log_handler.setFormatter(csv_format)
             self.logger.addHandler(log_handler)
         except IOError as e:
-            print("Logger: Error creating object: " + str(e))
             raise e
 
     def log(self, f_path, f_size, f_hash=None):
@@ -59,5 +58,4 @@ class Logger:
         try:
             self.logger.info(f_path)
         except IOError as e:
-            print("Logger: Error saving log entry: " + str(e))
             raise e
