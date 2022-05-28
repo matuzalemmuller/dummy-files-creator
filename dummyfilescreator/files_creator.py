@@ -1,10 +1,11 @@
 import hashlib
 import math
 import os
-# import time # used for debugging
 import threading
 import uuid
 from .logger import Logger
+
+# import time # used for debugging
 
 
 class FilesCreator(threading.Thread):

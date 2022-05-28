@@ -1,4 +1,5 @@
 import argparse
+import math
 import sys
 from .files_creator import FilesCreator
 from tqdm import tqdm
@@ -6,7 +7,9 @@ from tqdm import tqdm
 
 class DFCCli:
     def __init__(self):
-        parser = argparse.ArgumentParser(description='Application to generate dummy files')
+        parser = argparse.ArgumentParser(
+            description="Application to generate dummy files. Run without arguments to start in GUI mode or use the arguments below to use CLI mode."
+        )
         parser.add_argument(
             "--output", "-o", required=True, help="Location where files will be created"
         )
@@ -30,13 +33,6 @@ class DFCCli:
             help="Chunk size unit. Accepted values: KiB, MiB, GiB",
         )
         parser.add_argument(
-            "--debug",
-            "-d",
-            action="store_true",
-            required=False,
-            help="Print verbose output. Affects performance",
-        )
-        parser.add_argument(
             "--log", "-l", required=False, help="Saves log file. Affects performance"
         )
         parser.add_argument(
@@ -45,6 +41,13 @@ class DFCCli:
             action="store_true",
             required=False,
             help="Includes md5 hash in log file. Affects performance",
+        )
+        parser.add_argument(
+            "--debug",
+            "-d",
+            action="store_true",
+            required=False,
+            help="Print verbose output. Affects performance",
         )
         args = vars(parser.parse_args())
 
@@ -103,15 +106,15 @@ class DFCCli:
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
         if self.debug:
-            debug_percent = int(chunk_n * 100 / number_of_chunks)
-            self.pbar_file.n = debug_percent
+            # debug_percent = int(chunk_n * 100 / number_of_chunks)
+            self.pbar_file.n = chunk_n
             self.pbar_file.set_description("%s" % file_name)
             self.pbar_file.refresh()
- 
+
     def error_function(self, error_message: str):
-        if hasattr(self, 'pbar_total'):
+        if hasattr(self, "pbar_total"):
             self.pbar_total.close()
-        if hasattr(self, 'pbar_file'):
+        if hasattr(self, "pbar_file"):
             self.pbar_file.close()
         print("\r" + error_message)
         sys.exit(1)
@@ -120,7 +123,9 @@ class DFCCli:
         self.pbar_total.close()
         if self.debug:
             self.pbar_file.close()
-        print("\rFiles created")
+        print("\r" + str(self.number_files) + " file(s) created at " + self.folder_path)
+        if self.log_path != None:
+            print("Log file saved at " + self.log_path)
 
     def run(self):
         try:
@@ -141,7 +146,11 @@ class DFCCli:
 
             self.pbar_total = tqdm(range(self.number_files), unit=" files", leave=False)
             if self.debug:
-                self.pbar_file = tqdm(range(100), unit=" chunks", leave=False)
+                self.pbar_file = tqdm(
+                    range(self.files_creator.number_of_chunks),
+                    unit=" chunks",
+                    leave=False,
+                )
 
             self.files_creator.start()
         except IOError as e:
