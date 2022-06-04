@@ -122,9 +122,7 @@ class DFCUi(QMainWindow):
         total_chunks: int = None,
     ):
         created_files -= 1
-        self.main_window.label_progress.setText(
-            f"{created_files}/{total_files}"
-        )
+        self.main_window.label_progress.setText(f"{created_files}/{total_files}")
         self.main_window.progress_bar.setValue(created_files)
         if self.main_window.checkbox_debug.isChecked():
             self.main_window.label_debug_information.setText(f"Creating {file_name}")

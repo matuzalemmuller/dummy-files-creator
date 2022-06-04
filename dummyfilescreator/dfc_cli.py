@@ -130,8 +130,9 @@ class DFCCli:
         sys.exit(1)
 
     def complete_function(self):
-        self.pbar_total.close()
-        if self.verbose:
+        if hasattr(self, "pbar_total"):
+            self.pbar_total.close()
+        if hasattr(self, "pbar_file"):
             self.pbar_file.close()
         print(f"\r{self.number_files} file(s) created at {self.folder_path}")
         if self.log_path != None:
@@ -176,8 +177,8 @@ class DFCCli:
                     log_path=self.log_path,
                     log_hash=self.log_hash,
                     update_function=None,
-                    error_function=None,
-                    complete_function=None,
+                    error_function=self.error_function,
+                    complete_function=self.complete_function,
                 )
 
             self.files_creator.start()
