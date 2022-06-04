@@ -157,7 +157,7 @@
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
-       <layout class="QHBoxLayout" name="layout_debug_chunk">
+       <layout class="QHBoxLayout" name="layout_verbose_chunk">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -168,23 +168,23 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>30</width>
             <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkbox_debug">
+         <widget class="QCheckBox" name="checkbox_verbose">
           <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>23</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>23</height>
            </size>
           </property>
@@ -192,7 +192,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Affects performance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Debug</string>
+           <string>Verbose</string>
           </property>
          </widget>
         </item>
@@ -704,12 +704,12 @@
        </layout>
       </item>
       <item row="7" column="0" colspan="3">
-       <layout class="QHBoxLayout" name="layout_debug">
+       <layout class="QHBoxLayout" name="layout_verbose">
         <property name="spacing">
          <number>0</number>
         </property>
         <item>
-         <widget class="QWidget" name="widget_debug" native="true">
+         <widget class="QWidget" name="widget_verbose" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -740,12 +740,12 @@
              <height>51</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="layout_debug_vert">
+           <layout class="QVBoxLayout" name="layout_verbose_vert">
             <property name="spacing">
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_debug_information">
+             <widget class="QLabel" name="label_verbose_information">
               <property name="minimumSize">
                <size>
                 <width>510</width>
@@ -759,12 +759,12 @@
                </size>
               </property>
               <property name="text">
-               <string>Debug information</string>
+               <string>Verbose progress bar</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QProgressBar" name="progress_bar_debug">
+             <widget class="QProgressBar" name="progress_bar_verbose">
               <property name="minimumSize">
                <size>
                 <width>505</width>
@@ -825,7 +825,7 @@
   <tabstop>text_n_files</tabstop>
   <tabstop>text_size_files</tabstop>
   <tabstop>combo_file_unit</tabstop>
-  <tabstop>checkbox_debug</tabstop>
+  <tabstop>checkbox_verbose</tabstop>
   <tabstop>text_chunk_size</tabstop>
   <tabstop>combo_chunk_unit</tabstop>
   <tabstop>checkbox_savelog</tabstop>

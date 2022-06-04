@@ -9,6 +9,23 @@ from .logger import Logger
 
 
 class FilesCreator(threading.Thread):
+    __slots__ = (
+        "folder_path",
+        "number_files",
+        "verbose",
+        "log_path",
+        "log_hash",
+        "complete_function",
+        "update_function",
+        "error_function",
+        "abort",
+        "file_size_bytes",
+        "chunk_size_bytes",
+        "number_of_chunks",
+        "readable_size",
+        "logger",
+    )
+
     def __init__(
         self,
         folder_path: str,
@@ -17,7 +34,7 @@ class FilesCreator(threading.Thread):
         size_unit: str,
         chunk_size: int,
         chunk_unit: str,
-        debug: bool = None,
+        verbose: bool = None,
         log_path: str = None,
         log_hash: bool = None,
         complete_function=None,
@@ -27,7 +44,7 @@ class FilesCreator(threading.Thread):
         super().__init__()
         self.folder_path = folder_path
         self.number_files = number_files
-        self.debug = debug
+        self.verbose = verbose
         self.log_path = log_path
         self.log_hash = log_hash
         self.complete_function = complete_function
@@ -75,7 +92,7 @@ class FilesCreator(threading.Thread):
                     self.error_function(f"Error saving log file: {e}")
                 raise e
 
-    def write_log(self, msg: str):
+    def __write_log(self, msg: str):
         try:
             with open(msg, "rb") as fout:
                 if self.log_hash:
@@ -91,7 +108,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files(self):
+    def __create_files(self):
         for _ in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -114,7 +131,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files_with_log(self):
+    def __create_files_with_log(self):
         for _ in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -129,7 +146,7 @@ class FilesCreator(threading.Thread):
                 if self.error_function:
                     self.error_function(f"Error creating file: {e}")
                 return False
-            if not self.write_log(file_path):
+            if not self.__write_log(file_path):
                 return False
             if self.abort == True:
                 return False
@@ -139,7 +156,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files_with_progress(self):
+    def __create_files_with_progress(self):
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -164,7 +181,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files_with_progress_and_log(self):
+    def __create_files_with_progress_and_log(self):
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -179,7 +196,7 @@ class FilesCreator(threading.Thread):
                 if self.error_function:
                     self.error_function(f"Error creating file: {e}")
                 return False
-            if not self.write_log(file_path):
+            if not self.__write_log(file_path):
                 return False
             if self.abort == True:
                 return False
@@ -191,7 +208,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files_with_debug(self):
+    def __create_files_with_verbose(self):
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -224,7 +241,7 @@ class FilesCreator(threading.Thread):
 
         return True
 
-    def create_files_with_debug_and_log(self):
+    def __create_files_with_verbose_and_log(self):
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -246,7 +263,7 @@ class FilesCreator(threading.Thread):
                 if self.error_function:
                     self.error_function(f"Error creating file: {e}")
                 return False
-            if not self.write_log(file_path):
+            if not self.__write_log(file_path):
                 return False
             if self.abort == True:
                 return False
@@ -260,21 +277,21 @@ class FilesCreator(threading.Thread):
 
     def run(self):
         if self.update_function:
-            if self.debug:
+            if self.verbose:
                 if self.log_path:
-                    return self.create_files_with_debug_and_log()
+                    return self.__create_files_with_verbose_and_log()
                 else:
-                    return self.create_files_with_debug()
+                    return self.__create_files_with_verbose()
             else:
                 if self.log_path:
-                    return self.create_files_with_progress_and_log()
+                    return self.__create_files_with_progress_and_log()
                 else:
-                    return self.create_files_with_progress()
+                    return self.__create_files_with_progress()
         else:
             if self.log_path:
-                return self.create_files_with_log()
+                return self.__create_files_with_log()
             else:
-                return self.create_files()
+                return self.__create_files()
 
     def kill(self):
         self.abort = True

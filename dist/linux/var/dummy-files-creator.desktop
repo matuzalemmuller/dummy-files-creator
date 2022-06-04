@@ -7,13 +7,13 @@ Type=Application
 Name=Dummy Files Creator
 
 # Tooltip comment to show in menus.
-# Comment=A simple Hello World application.
+Comment=Desktop & CLI tool to generate dummy files
 
 # The path (folder) in which the executable is run
-Path=/opt/dummy-files-creator
+Path=/opt/dummyfilescreator
 
 # The executable (can include arguments)
-Exec=/opt/dummy-files-creator/dummy-files-creator
+Exec=/opt/dummyfilescreator/dummy-files-creator
 
 # The icon for the entry, using the name from `hicolor/scalable` without the extension.
 # You can also use a full path to a file in /opt.

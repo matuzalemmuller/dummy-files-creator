@@ -5,9 +5,25 @@ from tqdm import tqdm
 
 
 class DFCCli:
+    __slots__ = (
+        "folder_path",
+        "number_files",
+        "size_file",
+        "size_unit",
+        "chunk_size",
+        "chunk_unit",
+        "verbose",
+        "progressbar",
+        "log_path",
+        "log_hash",
+        "pbar_total",
+        "pbar_file",
+        "files_creator",
+    )
+
     def __init__(self):
         parser = argparse.ArgumentParser(
-            description="Application to generate dummy files. Run without arguments to start in GUI mode or use the arguments below to use CLI mode."
+            description="Application to generate dummy files. Run without arguments to start in GUI mode or include arguments to use CLI mode."
         )
         parser.add_argument(
             "--output", "-o", required=True, help="Location where files will be created"
@@ -46,7 +62,7 @@ class DFCCli:
             "-p",
             action="store_true",
             required=False,
-            help="Shows progress bar",
+            help="Shows progress bar. Affects performance",
         )
         parser.add_argument(
             "--verbose",
@@ -148,7 +164,7 @@ class DFCCli:
                     size_unit=self.size_unit,
                     chunk_size=self.chunk_size,
                     chunk_unit=self.chunk_unit,
-                    debug=self.verbose,
+                    verbose=self.verbose,
                     log_path=self.log_path,
                     log_hash=self.log_hash,
                     update_function=self.print_progress,
@@ -173,7 +189,7 @@ class DFCCli:
                     size_unit=self.size_unit,
                     chunk_size=self.chunk_size,
                     chunk_unit=self.chunk_unit,
-                    debug=self.verbose,
+                    verbose=self.verbose,
                     log_path=self.log_path,
                     log_hash=self.log_hash,
                     update_function=None,

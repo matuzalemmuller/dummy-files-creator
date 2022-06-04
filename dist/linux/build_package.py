@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import configparser
 import os
 import pathlib
@@ -262,7 +263,7 @@ def copy_files():
 
     try:
         shutil.copy(DESKTOP_FILE, PKG_DESKTOP_PATH)
-        shutil.copy(ICON_FILE, PKG_ICON_PATH)
+        shutil.copy(ICON_FILE, PKG_ICON_PATH + "/dummy-files-creator.svg")
         shutil.copytree(DIST_PATH, PKG_OPT_PATH)
     except (shutil.Error, OSError) as error:
         print("error: " + str(error))

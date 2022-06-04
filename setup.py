@@ -22,7 +22,8 @@ setup(
     install_requires=["PyQt5>=5.15.6", "tqdm>=4.64.0"],
     entry_points={
         "console_scripts": [
-            "dummyfilescreator = dummyfilescreator.dummyfilescreator:main"
+            "dummyfilescreator = dummyfilescreator.__main__:main"
         ]
     },
+    python_requires='>=3.6', # f-strings
 )

@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMe
 
 
 class About(QDialog):
+    __slots__ = "about_window"
+
     def __init__(self):
         super(About, self).__init__()
         self.about_window = UiAbout()
@@ -22,6 +24,8 @@ class About(QDialog):
 
 
 class DFCUi(QMainWindow):
+    __slots__ = "main_window", "creator_thread"
+
     signal_update_progress = pyqtSignal(int, int, str, int, int)
     signal_error = pyqtSignal(str)
     signal_complete = pyqtSignal()
@@ -31,7 +35,7 @@ class DFCUi(QMainWindow):
         self.main_window = UiMainWindow()
         self.main_window.setupUi(self)
         self.setWindowIcon(QIcon(":/icon.png"))
-        self.__creator_thread = None
+        self.creator_thread = None
         # Initialize UI elements
         self.__set_number_validator()
         self.__set_connect()
@@ -121,12 +125,15 @@ class DFCUi(QMainWindow):
         current_chunk: int = None,
         total_chunks: int = None,
     ):
-        created_files -= 1
+        if self.main_window.checkbox_verbose.isChecked():
+            created_files -= 1
         self.main_window.label_progress.setText(f"{created_files}/{total_files}")
         self.main_window.progress_bar.setValue(created_files)
-        if self.main_window.checkbox_debug.isChecked():
-            self.main_window.label_debug_information.setText(f"Creating {file_name}")
-            self.main_window.progress_bar_debug.setValue(current_chunk)
+        if self.main_window.checkbox_verbose.isChecked():
+            self.main_window.label_verbose_information.setText(
+                f"Creating {file_name}"
+            )
+            self.main_window.progress_bar_verbose.setValue(current_chunk)
 
     @pyqtSlot(str)
     def __display_error_message(self, error_message: str):
@@ -195,7 +202,7 @@ class DFCUi(QMainWindow):
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             quit_code = msg.exec_()
             if quit_code == QMessageBox.Yes:
-                self.__creator_thread.kill()
+                self.creator_thread.kill()
                 sys.exit(0)
         else:
             sys.exit(0)
@@ -220,21 +227,21 @@ class DFCUi(QMainWindow):
             size_unit = self.main_window.combo_file_unit.currentText()
             chunk_size = int(self.main_window.text_chunk_size.text())
             chunk_unit = self.main_window.combo_chunk_unit.currentText()
-            debug = self.main_window.checkbox_debug.isChecked()
+            verbose = self.main_window.checkbox_verbose.isChecked()
             log_hash = self.main_window.checkbox_md5hash.isChecked()
             if self.main_window.checkbox_savelog.isChecked():
                 log_path = self.main_window.text_logfilepath.text()
             else:
                 log_path = None
             try:
-                self.__creator_thread = FilesCreator(
+                self.creator_thread = FilesCreator(
                     folder_path=folder_path,
                     number_files=number_files,
                     size_file=size_file,
                     size_unit=size_unit,
                     chunk_size=chunk_size,
                     chunk_unit=chunk_unit,
-                    debug=debug,
+                    verbose=verbose,
                     log_path=log_path,
                     log_hash=log_hash,
                     update_function=self.emit_progress_bar_update,
@@ -267,9 +274,10 @@ class DFCUi(QMainWindow):
                     number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
 
                 self.main_window.progress_bar.setMaximum(number_files)
-                self.main_window.progress_bar_debug.setMaximum(number_of_chunks)
+                self.main_window.progress_bar_verbose.setMaximum(number_of_chunks)
+                self.main_window.label_progress.setText(f"0/{number_files}")
 
-                self.__creator_thread.start()
+                self.creator_thread.start()
             except IOError as e:
                 print(f"UI: Error starting FilesCreator thread: {e}")
                 return
@@ -282,7 +290,7 @@ class DFCUi(QMainWindow):
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             cancel_code = msg.exec_()
             if cancel_code == QMessageBox.Yes:
-                self.__creator_thread.kill()
+                self.creator_thread.kill()
                 self.__change_ui(state="enabled")
 
     def __change_ui(self, state: str):
@@ -291,7 +299,7 @@ class DFCUi(QMainWindow):
             self.main_window.label_n_files.setDisabled(True)
             self.main_window.label_size_files.setDisabled(True)
             self.main_window.label_logfilepath.setDisabled(True)
-            self.main_window.label_debug_information.setDisabled(True)
+            self.main_window.label_verbose_information.setDisabled(True)
             self.main_window.text_path.setDisabled(True)
             self.main_window.text_n_files.setDisabled(True)
             self.main_window.text_size_files.setDisabled(True)
@@ -299,7 +307,7 @@ class DFCUi(QMainWindow):
             self.main_window.text_logfilepath.setDisabled(True)
             self.main_window.button_browse_files.setDisabled(True)
             self.main_window.button_browse_log.setDisabled(True)
-            self.main_window.checkbox_debug.setDisabled(True)
+            self.main_window.checkbox_verbose.setDisabled(True)
             self.main_window.checkbox_savelog.setDisabled(True)
             self.main_window.checkbox_md5hash.setDisabled(True)
             self.main_window.combo_file_unit.setDisabled(True)
@@ -307,8 +315,8 @@ class DFCUi(QMainWindow):
             self.main_window.button_create_stop.setText("Stop")
             self.main_window.button_close_quit.setText("Quit")
             self.main_window.widget_progress_bar.show()
-            if self.main_window.checkbox_debug.isChecked():
-                self.main_window.widget_debug.show()
+            if self.main_window.checkbox_verbose.isChecked():
+                self.main_window.widget_verbose.show()
             if self.main_window.checkbox_savelog.isChecked():
                 self.main_window.widget_log.show()
             else:
@@ -318,7 +326,7 @@ class DFCUi(QMainWindow):
             self.main_window.label_n_files.setDisabled(False)
             self.main_window.label_size_files.setDisabled(False)
             self.main_window.label_logfilepath.setDisabled(False)
-            self.main_window.label_debug_information.setDisabled(False)
+            self.main_window.label_verbose_information.setDisabled(False)
             self.main_window.text_path.setDisabled(False)
             self.main_window.text_n_files.setDisabled(False)
             self.main_window.text_size_files.setDisabled(False)
@@ -326,7 +334,7 @@ class DFCUi(QMainWindow):
             self.main_window.text_logfilepath.setDisabled(False)
             self.main_window.button_browse_files.setDisabled(False)
             self.main_window.button_browse_log.setDisabled(False)
-            self.main_window.checkbox_debug.setDisabled(False)
+            self.main_window.checkbox_verbose.setDisabled(False)
             self.main_window.checkbox_savelog.setDisabled(False)
             self.main_window.checkbox_md5hash.setDisabled(False)
             self.main_window.combo_file_unit.setDisabled(False)
@@ -334,10 +342,10 @@ class DFCUi(QMainWindow):
             self.main_window.button_create_stop.setText("Create")
             self.main_window.button_close_quit.setText("Close")
             self.main_window.progress_bar.setValue(0)
-            self.main_window.progress_bar_debug.setValue(0)
+            self.main_window.progress_bar_verbose.setValue(0)
             self.main_window.label_progress.setText("0/0")
             self.main_window.widget_progress_bar.hide()
-            self.main_window.widget_debug.hide()
+            self.main_window.widget_verbose.hide()
             if self.main_window.checkbox_savelog.isChecked():
                 self.main_window.widget_log.show()
             else:
