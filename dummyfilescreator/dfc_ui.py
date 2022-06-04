@@ -1,10 +1,10 @@
 #! /usr/bin/env python3
 import math
 import sys
-from . import icon_qt
+from . import qt_icon
 from .files_creator import FilesCreator
-from .ui_main_window import UiMainWindow
-from .ui_about import UiAbout
+from .qt_main_window import UiMainWindow
+from .qt_about_window import UiAbout
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
 from PyQt5.QtGui import QIcon, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
