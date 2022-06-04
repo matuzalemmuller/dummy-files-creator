@@ -7,7 +7,7 @@ CURRENT_DIR = Path(__file__).parent
 sys.path.insert(0, str(CURRENT_DIR))
 
 config = configparser.ConfigParser()
-config.read(CURRENT_DIR / "package.config")
+config.read(CURRENT_DIR / "package.ini")
 
 setup(
     name="dummyfilescreator",

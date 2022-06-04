@@ -1,5 +1,4 @@
 import argparse
-import math
 import sys
 from .files_creator import FilesCreator
 from tqdm import tqdm
@@ -43,11 +42,18 @@ class DFCCli:
             help="Includes md5 hash in log file. Affects performance",
         )
         parser.add_argument(
-            "--debug",
-            "-d",
+            "--progressbar",
+            "-p",
             action="store_true",
             required=False,
-            help="Print verbose output. Affects performance",
+            help="Shows progress bar",
+        )
+        parser.add_argument(
+            "--verbose",
+            "-v",
+            action="store_true",
+            required=False,
+            help="Shows per-file progress bar. Affects performance",
         )
         args = vars(parser.parse_args())
 
@@ -80,10 +86,15 @@ class DFCCli:
             self.chunk_size = 1024
             self.chunk_unit = "KiB"
 
-        if args["debug"] != None:
-            self.debug = bool(args["debug"])
+        if args["verbose"] != None:
+            self.verbose = bool(args["verbose"])
         else:
-            self.debug = None
+            self.verbose = None
+
+        if args["progressbar"] != None:
+            self.progressbar = bool(args["progressbar"])
+        else:
+            self.progressbar = None
 
         if args["log"] != None:
             self.log_path = str(args["log"])
@@ -105,7 +116,7 @@ class DFCCli:
     ):
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
-        if self.debug:
+        if self.verbose:
             # debug_percent = int(chunk_n * 100 / number_of_chunks)
             self.pbar_file.n = chunk_n
             self.pbar_file.set_description("%s" % file_name)
@@ -121,35 +132,53 @@ class DFCCli:
 
     def complete_function(self):
         self.pbar_total.close()
-        if self.debug:
+        if self.verbose:
             self.pbar_file.close()
-        print("\r" + str(self.number_files) + " file(s) created at " + self.folder_path)
+        print(f"\r{str(self.number_files)} file(s) created at {self.folder_path}")
         if self.log_path != None:
-            print("Log file saved at " + self.log_path)
+            print(f"Log file saved at {self.log_path}")
 
     def run(self):
         try:
-            self.files_creator = FilesCreator(
-                folder_path=self.folder_path,
-                number_files=self.number_files,
-                size_file=self.size_file,
-                size_unit=self.size_unit,
-                chunk_size=self.chunk_size,
-                chunk_unit=self.chunk_unit,
-                debug=self.debug,
-                log_path=self.log_path,
-                log_hash=self.log_hash,
-                update_function=self.print_progress,
-                error_function=self.error_function,
-                complete_function=self.complete_function,
-            )
+            if self.progressbar or self.verbose:
+                self.files_creator = FilesCreator(
+                    folder_path=self.folder_path,
+                    number_files=self.number_files,
+                    size_file=self.size_file,
+                    size_unit=self.size_unit,
+                    chunk_size=self.chunk_size,
+                    chunk_unit=self.chunk_unit,
+                    debug=self.verbose,
+                    log_path=self.log_path,
+                    log_hash=self.log_hash,
+                    update_function=self.print_progress,
+                    error_function=self.error_function,
+                    complete_function=self.complete_function,
+                )
 
-            self.pbar_total = tqdm(range(self.number_files), unit=" files", leave=False)
-            if self.debug:
-                self.pbar_file = tqdm(
-                    range(self.files_creator.number_of_chunks),
-                    unit=" chunks",
-                    leave=False,
+                self.pbar_total = tqdm(
+                    range(self.number_files), unit=" files", leave=False
+                )
+                if self.verbose:
+                    self.pbar_file = tqdm(
+                        range(self.files_creator.number_of_chunks),
+                        unit=" chunks",
+                        leave=False,
+                    )
+            else:
+                self.files_creator = FilesCreator(
+                    folder_path=self.folder_path,
+                    number_files=self.number_files,
+                    size_file=self.size_file,
+                    size_unit=self.size_unit,
+                    chunk_size=self.chunk_size,
+                    chunk_unit=self.chunk_unit,
+                    debug=self.verbose,
+                    log_path=self.log_path,
+                    log_hash=self.log_hash,
+                    update_function=None,
+                    error_function=None,
+                    complete_function=None,
                 )
 
             self.files_creator.start()

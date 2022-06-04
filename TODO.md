@@ -1,7 +1,5 @@
-- [ ] Add CLI support with progress bar
 - [ ] Add GitHub action (CLI-based) to test file creation and hash matching
-- [ ] Add Pyinstaller to genrate pkg and exe executables
-- [ ] Add fpm to generate deb and rpm installers
+- [ ] Add Pyinstaller to generate pkg and exe executables
   - [ ] Create Docker image that generates deb and rpm installers
 - [ ] Try to create app image
 - [ ] Publish to Pypi

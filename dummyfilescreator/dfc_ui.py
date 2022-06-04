@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+import math
 import sys
 from . import icon_qt
 from .files_creator import FilesCreator
@@ -120,15 +121,14 @@ class DFCUi(QMainWindow):
         current_chunk: int = None,
         total_chunks: int = None,
     ):
-        progress_bar_text = str(created_files) + "/" + str(total_files)
-        progress_bar_percent = int(created_files * 100 / total_files)
-        self.main_window.label_progress.setText(progress_bar_text)
-        self.main_window.progress_bar.setValue(progress_bar_percent)
+        created_files -= 1
+        self.main_window.label_progress.setText(
+            f"{str(created_files)}/{str(total_files)}"
+        )
+        self.main_window.progress_bar.setValue(created_files)
         if self.main_window.checkbox_debug.isChecked():
-            debug_bar = "Creating " + file_name
-            debug_percent = int(current_chunk * 100 / total_chunks)
-            self.main_window.label_debug_information.setText(debug_bar)
-            self.main_window.progress_bar_debug.setValue(debug_percent)
+            self.main_window.label_debug_information.setText(f"Creating {file_name}")
+            self.main_window.progress_bar_debug.setValue(current_chunk)
 
     @pyqtSlot(str)
     def __display_error_message(self, error_message: str):
@@ -243,6 +243,34 @@ class DFCUi(QMainWindow):
                     complete_function=self.emit_display_success_message,
                     error_function=self.emit_error_window,
                 )
+
+                if size_unit == "KiB":
+                    size_mult = 1
+                elif size_unit == "MiB":
+                    size_mult = 2
+                elif size_unit == "GiB":
+                    size_mult = 3
+
+                if chunk_unit == "KiB":
+                    chunk_mult = 1
+                elif chunk_unit == "MiB":
+                    chunk_mult = 2
+                elif chunk_unit == "GiB":
+                    chunk_mult = 3
+
+                file_size_bytes = math.ceil(size_file * (1024**size_mult))
+                chunk_size_bytes = math.ceil(chunk_size * (1024**chunk_mult))
+
+                # If the chunk size is too large, use the file size instead
+                if file_size_bytes < chunk_size_bytes:
+                    chunk_size_bytes = file_size_bytes
+                    number_of_chunks = 1
+                else:
+                    number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
+
+                self.main_window.progress_bar.setMaximum(number_files)
+                self.main_window.progress_bar_debug.setMaximum(number_of_chunks)
+
                 self.__creator_thread.start()
             except IOError as e:
                 print("UI: Error starting FilesCreator thread: " + str(e))
