@@ -123,7 +123,7 @@ class DFCUi(QMainWindow):
     ):
         created_files -= 1
         self.main_window.label_progress.setText(
-            f"{str(created_files)}/{str(total_files)}"
+            f"{created_files}/{total_files}"
         )
         self.main_window.progress_bar.setValue(created_files)
         if self.main_window.checkbox_debug.isChecked():
@@ -180,12 +180,12 @@ class DFCUi(QMainWindow):
 
     def __click_button_browse_files(self):
         dialog = QFileDialog()
-        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
+        path = f"{QFileDialog.getExistingDirectory(dialog, 'Select Directory')}"
         self.main_window.text_path.setText(path)
 
     def __click_button_browse_log(self):
         dialog = QFileDialog()
-        path = str(QFileDialog.getExistingDirectory(dialog, "Select Directory"))
+        path = f"{QFileDialog.getExistingDirectory(dialog, 'Select Directory')}"
         self.main_window.text_logfilepath.setText(path)
 
     def __click_button_close_quit(self):
@@ -273,7 +273,7 @@ class DFCUi(QMainWindow):
 
                 self.__creator_thread.start()
             except IOError as e:
-                print("UI: Error starting FilesCreator thread: " + str(e))
+                print(f"UI: Error starting FilesCreator thread: {e}")
                 return
             self.__change_ui(state="disabled")
         else:

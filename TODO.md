@@ -1,5 +1,8 @@
+- [ ] Use multiprocessing instead of threading
+- [ ] Convert everything to f-strings
 - [ ] Add GitHub action (CLI-based) to test file creation and hash matching
 - [ ] Add Pyinstaller to generate pkg and exe executables
   - [ ] Create Docker image that generates deb and rpm installers
 - [ ] Try to create app image
 - [ ] Publish to Pypi
+- [ ] Filter variables prior to running files_creator thread and split run method into multiple methods to reduce overhead

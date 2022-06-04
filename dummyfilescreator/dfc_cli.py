@@ -57,12 +57,12 @@ class DFCCli:
         )
         args = vars(parser.parse_args())
 
-        self.folder_path = str(args["output"])
+        self.folder_path = f"{args['output']}"
         self.number_files = int(args["n_files"])
         self.size_file = int(args["size"])
 
         if args["unit"] == "KiB" or args["unit"] == "MiB" or args["unit"] == "GiB":
-            self.size_unit = str(args["unit"])
+            self.size_unit = f"{args['unit']}"
         else:
             print(
                 "Error: Acceptable values for --file-unit/-fu are 'KiB', 'MiB', and 'GiB'"
@@ -76,7 +76,7 @@ class DFCCli:
                 or args["chunk_unit"] == "GiB"
             ):
                 self.chunk_size = int(args["chunk_size"])
-                self.chunk_unit = str(args["chunk_unit"])
+                self.chunk_unit = f"{args['chunk_unit']}"
             else:
                 print(
                     "Error: Acceptable values for --chunk-unit/-cu are 'KiB', 'MiB', and 'GiB'"
@@ -97,12 +97,12 @@ class DFCCli:
             self.progressbar = None
 
         if args["log"] != None:
-            self.log_path = str(args["log"])
+            self.log_path = f"{args['log']}"
         else:
             self.log_path = None
 
         if args["hash"] != None:
-            self.log_hash = str(args["hash"])
+            self.log_hash = f"{args['hash']}"
         else:
             self.log_hash = None
 
@@ -117,7 +117,6 @@ class DFCCli:
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
         if self.verbose:
-            # debug_percent = int(chunk_n * 100 / number_of_chunks)
             self.pbar_file.n = chunk_n
             self.pbar_file.set_description("%s" % file_name)
             self.pbar_file.refresh()
@@ -134,7 +133,7 @@ class DFCCli:
         self.pbar_total.close()
         if self.verbose:
             self.pbar_file.close()
-        print(f"\r{str(self.number_files)} file(s) created at {self.folder_path}")
+        print(f"\r{self.number_files} file(s) created at {self.folder_path}")
         if self.log_path != None:
             print(f"Log file saved at {self.log_path}")
 
@@ -183,5 +182,5 @@ class DFCCli:
 
             self.files_creator.start()
         except IOError as e:
-            print("CLI: Error starting FilesCreator thread: " + str(e))
+            print(f"CLI: Error starting FilesCreator thread: {e}")
             sys.exit(1)

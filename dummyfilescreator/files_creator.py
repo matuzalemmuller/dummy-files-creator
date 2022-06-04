@@ -63,7 +63,7 @@ class FilesCreator(threading.Thread):
             )
 
         if self.log_path:
-            self.readable_size = str(size_file) + size_unit
+            self.readable_size = f"{size_file}{size_unit}"
             if self.log_path[-1] != "/":
                 self.log_path = f"{self.log_path}/dummy-files-creator.csv"
             else:
@@ -72,12 +72,12 @@ class FilesCreator(threading.Thread):
                 self.logger = Logger(self.log_path, self.error_function)
             except IOError as e:
                 if self.error_function:
-                    self.error_function(f"Error saving log file: {str(e)}")
+                    self.error_function(f"Error saving log file: {e}")
                 raise e
 
     def run(self):
         for n_created in range(1, self.number_files + 1):
-            file_name = f"{str(uuid.uuid4())}.dummy"
+            file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
             try:
                 with open(file_path, "wb") as fout:
@@ -103,7 +103,7 @@ class FilesCreator(threading.Thread):
                             fout.write(os.urandom(self.chunk_size_bytes))
             except IOError as e:
                 if self.error_function:
-                    self.error_function(f"Error creating file: {str(e)}")
+                    self.error_function(f"Error creating file: {e}")
                 return False
             if self.log_path:
                 try:
@@ -116,7 +116,7 @@ class FilesCreator(threading.Thread):
                             self.logger.log(file_path, self.readable_size, "")
                 except IOError as e:
                     if self.error_function:
-                        self.error_function(f"Error saving log: {str(e)}")
+                        self.error_function(f"Error saving log: {e}")
                     return False
             # time.sleep(1)  # used for debugging
             if self.abort == True:
