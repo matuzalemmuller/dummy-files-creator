@@ -5,11 +5,11 @@ block_cipher = None
 
 
 a = Analysis(
-    ['..\\dummyfilescreator.py'],
+    ['..\\..\\dummyfilescreator.py'],
     pathex=[],
     binaries=[],
     datas=[
-      ('..\\design\\icon\\icon.png','icon')
+      ('..\\..\\design\\icon\\icon.png','icon')
     ],
     hiddenimports=[],
     hookspath=[],
@@ -35,4 +35,4 @@ exe = EXE(pyz,
           upx=True,
           runtime_tmpdir=None,
           console=False,
-          icon='..\\design\\icon\\icon.ico')
+          icon='..\\..\\design\\icon\\icon.ico')

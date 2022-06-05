@@ -130,9 +130,7 @@ class DFCUi(QMainWindow):
         self.main_window.label_progress.setText(f"{created_files}/{total_files}")
         self.main_window.progress_bar.setValue(created_files)
         if self.main_window.checkbox_verbose.isChecked():
-            self.main_window.label_verbose_information.setText(
-                f"Creating {file_name}"
-            )
+            self.main_window.label_verbose_information.setText(f"Creating {file_name}")
             self.main_window.progress_bar_verbose.setValue(current_chunk)
 
     @pyqtSlot(str)
