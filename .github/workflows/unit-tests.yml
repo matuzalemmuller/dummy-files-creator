@@ -1,0 +1,20 @@
+name: Unit tests
+on: [push]
+jobs:
+  Basic-Test:
+    runs-on: ubuntu-20.04
+    container:
+      image: python:3.8-alpine
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install tqdm requirements for CLI mode
+        run: pip3 install tqdm==4.64.0
+      - name: Create directory for test data
+        run: mkdir data-files
+      - name: Create test files in CLI mode
+        run: python3 -m dummyfilescreator -o=data-files -fs=1 -fu=MiB -n=2 -l=data-files
+      - name: Confirm that files are created
+        run: if [ $(ls -l data-files | wc -l) -ne 4 ]; then exit 1; fi
+      - name: Run unit tests
+        run: python3 -m tests

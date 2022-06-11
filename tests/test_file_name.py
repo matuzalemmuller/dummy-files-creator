@@ -4,9 +4,6 @@ import sys
 import unittest
 from .common_lib import *
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/../")
-from dummyfilescreator.files_creator import FilesCreator
-
 
 class TestFileName(unittest.TestCase):
     def match_file_name_with_log(self):

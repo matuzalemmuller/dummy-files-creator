@@ -3,9 +3,6 @@ import sys
 import unittest
 from .common_lib import *
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + "/../")
-from dummyfilescreator.files_creator import FilesCreator
-
 
 class TestFileCreation(unittest.TestCase):
     def test_log_creation(self):
