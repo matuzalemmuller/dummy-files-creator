@@ -4,14 +4,13 @@ __pycache__
 # virtualenv
 /env
 
-# Pyinstaller generated directories
-/dist/linux/build
-/dist/linux/dist
-/dist/linux/package
-/dist/linux/logs
-/dist/linux/dummyfilescreator.deb
-/dist/linux/dummyfilescreator.rpm
-
 # Local releases
-/*egg-info
+*egg-info
 /build
+/dist
+/pkg/linux/build
+/pkg/linux/dist
+/pkg/linux/package
+/pkg/linux/logs
+/pkg/linux/dummyfilescreator.deb
+/pkg/linux/dummyfilescreator.rpm
