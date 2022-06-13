@@ -8,49 +8,6 @@ See the project in [GitHub](https://github.com/matuzalemmuller/dummy-files-creat
 
 For a bash-based (more performatic) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
 
-## Installation
-
-Pre-compiled packages are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-### Cross-platform
-
-Install via pip:
-
-```
-pip3 install dummyfilescreator
-```
-
-or, install as a local package:
-
-```
-git clone https://github.com/matuzalemmuller/dummy-files-creator
-python3 setup.py install
-```
-
-or, don't install, and just run as a regular python program:
-
-```
-git clone https://github.com/matuzalemmuller/dummy-files-creator
-pip3 install -r requirements.txt
-python3 dummyfilescreator.py
-```
-
-### Windows
-
-Download the latest executable from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-* The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
-* The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
-
-### Linux
-
-`.deb` and `.rpm` packages are available in the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-### macOS
-
-Download the latest `.dmg` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-* Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
-
 ## Usage
 
 Both GUI and CLI modes are available. Note that CLI mode is recommended for creating large datasets.
@@ -59,7 +16,7 @@ Both GUI and CLI modes are available. Note that CLI mode is recommended for crea
 
 To use the GUI mode, start `dummyfilescreator` without arguments. This mode is **not** recommended for creating large datasets.
 
-![Dummy Files Creator](./doc/screenshot.png)
+![Dummy Files Creator](./screenshot.png)
 
 ### CLI mode
 
@@ -80,11 +37,11 @@ Recommended for creating large datasets. The parameters for CLI mode are listed 
 
 Example:
 
-* Create 5 files of 80 MiB each, show the individual file creation progress (verbose output), and save the log file with md5 hash to /tmp.
+* Create 5 files of 80 MiB each, show the individual file creation progress, and save the log file with md5 hash to /tmp.
 
-[![Recording](./doc/recording.gif)](https://asciinema.org/a/0o0rgu5yX0AlutxZzwdTjpRZk)
+[![Recording](./recording.gif)](https://asciinema.org/a/0o0rgu5yX0AlutxZzwdTjpRZk)
 
-```
+```sh
 $ dummyfilescreator -o=/tmp -n=5 -fs=80 -fu=MiB -cs=1 -cu=MiB -l=/tmp -ha -v
 5 file(s) created in /tmp
 Log file saved to /tmp

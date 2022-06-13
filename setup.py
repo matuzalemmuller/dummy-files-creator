@@ -1,9 +1,9 @@
-from setuptools import setup
-from pathlib import Path 
 import sys
 import configparser
+from pathlib import Path
+from setuptools import setup
 
-with open("README.md", "r") as fh:
+with open("PyPi_description.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 CURRENT_DIR = Path(__file__).parent
@@ -26,9 +26,14 @@ setup(
     include_package_data=True,
     install_requires=["PyQt5>=5.15.6", "tqdm>=4.64.0"],
     entry_points={
-        "console_scripts": [
-            "dummyfilescreator = dummyfilescreator.__main__:main"
-        ]
+        "console_scripts": ["dummyfilescreator = dummyfilescreator.__main__:main"]
     },
-    python_requires='>=3.6', # f-strings
+    python_requires=">=3.6",  # f-strings
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Information Technology",
+        "Operating System :: OS Independent",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Topic :: Software Development :: Quality Assurance",
+    ],
 )

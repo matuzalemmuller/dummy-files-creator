@@ -118,7 +118,7 @@ class DFCCli:
             self.log_path = None
 
         if args["hash"] != None:
-            self.log_hash = f"{args['hash']}"
+            self.log_hash = bool(args['hash'])
         else:
             self.log_hash = None
 
@@ -150,9 +150,9 @@ class DFCCli:
             self.pbar_total.close()
         if hasattr(self, "pbar_file"):
             self.pbar_file.close()
-        print(f"\r{self.number_files} file(s) created at {self.folder_path}")
+        print(f"\r{self.number_files} file(s) created in {self.folder_path}")
         if self.log_path != None:
-            print(f"Log file saved at {self.log_path}")
+            print(f"Log file saved to {self.log_path}")
 
     def run(self):
         try:
