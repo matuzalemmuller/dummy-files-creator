@@ -39,8 +39,8 @@ python3 dummyfilescreator.py
 
 Download the latest executable from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
-  * The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
-  * The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
+*   The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
+*   The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
 
 ### Linux
 
@@ -50,7 +50,7 @@ Download the latest executable from the [releases page](https://github.com/matuz
 
 Download the latest `.dmg` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
-  * Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
+*   Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
 ## Usage
 
@@ -81,7 +81,7 @@ Recommended for creating large datasets. The parameters for CLI mode are listed 
 
 Example:
 
-* Create 5 files of 80 MiB each, show the individual file creation progress (verbose output), and save the log file with md5 hash to /tmp.
+*   Create 5 files of 80 MiB each, show the individual file creation progress (verbose output), and save the log file with md5 hash to /tmp.
 
 [![Recording](./doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
 

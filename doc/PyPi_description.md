@@ -37,9 +37,9 @@ Recommended for creating large datasets. The parameters for CLI mode are listed 
 
 Example:
 
-* Create 5 files of 80 MiB each, show the individual file creation progress, and save the log file with md5 hash to /tmp.
+*   Create 5 files of 80 MiB each, show the individual file creation progress, and save the log file with md5 hash to /tmp.
 
-[![Recording](./doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
+[![Recording](./recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
 
 ```sh
 $ dummyfilescreator -o=/tmp -n=5 -fs=80 -fu=MiB -cs=1 -cu=MiB -l=/tmp -ha -v

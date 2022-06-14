@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-  * [Python 3.6 or later](https://www.python.org/downloads/release/python-360/) & [PyInstaller](https://pypi.org/project/pyinstaller/)
+*   [Python 3.6 or later](https://www.python.org/downloads/release/python-360/) & [PyInstaller](https://pypi.org/project/pyinstaller/)
 
 ## Instructions
 
