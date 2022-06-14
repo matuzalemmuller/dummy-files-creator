@@ -5,8 +5,6 @@ import threading
 import uuid
 from .logger import Logger
 
-# import time # used for debugging
-
 
 class FilesCreator(threading.Thread):
     __slots__ = (
@@ -87,211 +85,61 @@ class FilesCreator(threading.Thread):
                 self.log_path = f"{self.log_path}/dummy-files-creator.csv"
             try:
                 self.logger = Logger(self.log_path, self.error_function)
-            except IOError as e:
+            except IOError as error:
                 if self.error_function:
-                    self.error_function(f"Error saving log file: {e}")
-                raise e
-
-    def __write_log(self, msg: str):
-        try:
-            with open(msg, "rb") as fout:
-                if self.log_hash:
-                    bytes = fout.read()
-                    hash_result = hashlib.md5(bytes).hexdigest()
-                    self.logger.log(msg, self.readable_size, hash_result)
-                else:
-                    self.logger.log(msg, self.readable_size, "")
-        except IOError as e:
-            if self.error_function:
-                self.error_function(f"Error saving log: {e}")
-            return False
-
-        return True
-
-    def __create_files(self):
-        for _ in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for _ in range(self.number_of_chunks):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-            if self.abort == True:
-                return False
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
-
-    def __create_files_with_log(self):
-        for _ in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for _ in range(self.number_of_chunks):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-            if not self.__write_log(file_path):
-                return False
-            if self.abort == True:
-                return False
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
-
-    def __create_files_with_progress(self):
-        for n_created in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for _ in range(self.number_of_chunks):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-            if self.abort == True:
-                return False
-            else:
-                self.update_function(n_created, self.number_files, file_name, 1, 1)
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
-
-    def __create_files_with_progress_and_log(self):
-        for n_created in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for _ in range(self.number_of_chunks):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-            if not self.__write_log(file_path):
-                return False
-            if self.abort == True:
-                return False
-            else:
-                self.update_function(n_created, self.number_files, file_name, 1, 1)
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
-
-    def __create_files_with_verbose(self):
-        for n_created in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for chunk_n in range(1, self.number_of_chunks + 1):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-                        self.update_function(
-                            n_created,
-                            self.number_files,
-                            file_name,
-                            chunk_n,
-                            self.number_of_chunks,
-                        )
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-
-            if self.abort == True:
-                return False
-            else:
-                self.update_function(n_created, self.number_files, file_name, 1, 1)
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
-
-    def __create_files_with_verbose_and_log(self):
-        for n_created in range(1, self.number_files + 1):
-            file_name = f"{uuid.uuid4()}.dummy"
-            file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    for chunk_n in range(1, self.number_of_chunks + 1):
-                        if self.abort == True:
-                            os.remove(file_path)
-                            return False
-                        fout.write(os.urandom(self.chunk_size_bytes))
-                        self.update_function(
-                            n_created,
-                            self.number_files,
-                            file_name,
-                            chunk_n,
-                            self.number_of_chunks,
-                        )
-            except IOError as e:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {e}")
-                return False
-            if not self.__write_log(file_path):
-                return False
-            if self.abort == True:
-                return False
-            else:
-                self.update_function(n_created, self.number_files, file_name, 1, 1)
-
-        if self.complete_function:
-            self.complete_function()
-
-        return True
+                    self.error_function(f"Error saving log file: {error}")
+                raise error
 
     def run(self):
-        if self.update_function:
-            if self.verbose:
-                if self.log_path:
-                    return self.__create_files_with_verbose_and_log()
-                else:
-                    return self.__create_files_with_verbose()
-            else:
-                if self.log_path:
-                    return self.__create_files_with_progress_and_log()
-                else:
-                    return self.__create_files_with_progress()
-        else:
+        for n_created in range(1, self.number_files + 1):
+            file_name = f"{uuid.uuid4()}.dummy"
+            file_path = f"{self.folder_path}/{file_name}"
+            try:
+                with open(file_path, "wb") as fout:
+                    if self.verbose:
+                        for chunk_n in range(1, self.number_of_chunks + 1):
+                            if self.abort is True:
+                                os.remove(file_path)
+                                return False
+                            fout.write(os.urandom(self.chunk_size_bytes))
+                            if self.update_function:
+                                self.update_function(
+                                    n_created,
+                                    file_name,
+                                    chunk_n,
+                                )
+                    else:
+                        for _ in range(self.number_of_chunks):
+                            if self.abort is True:
+                                os.remove(file_path)
+                                return False
+                            fout.write(os.urandom(self.chunk_size_bytes))
+            except IOError as error:
+                if self.error_function:
+                    self.error_function(f"Error creating file: {error}")
+                return False
             if self.log_path:
-                return self.__create_files_with_log()
-            else:
-                return self.__create_files()
+                try:
+                    with open(file_path, "rb") as fout:
+                        if self.log_hash:
+                            f_bytes = fout.read()
+                            hash_result = hashlib.md5(f_bytes).hexdigest()
+                            self.logger.log(file_path, self.readable_size, hash_result)
+                        else:
+                            self.logger.log(file_path, self.readable_size, "")
+                except IOError as error:
+                    if self.error_function:
+                        self.error_function(f"Error saving log: {error}")
+                    return False
+            if self.abort is True:
+                return False
+            if self.update_function:
+                self.update_function(n_created, file_name, 1)
+
+        if self.complete_function:
+            self.complete_function()
+
+        return True
 
     def kill(self):
         self.abort = True

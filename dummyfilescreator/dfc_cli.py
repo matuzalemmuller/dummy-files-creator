@@ -1,7 +1,7 @@
 import argparse
 import sys
-from .files_creator import FilesCreator
 from tqdm import tqdm
+from .files_creator import FilesCreator
 
 
 class DFCCli:
@@ -85,7 +85,7 @@ class DFCCli:
             )
             sys.exit(1)
 
-        if args["chunk_size"] != None and args["chunk_unit"] != None:
+        if args["chunk_size"] is not None and args["chunk_unit"] is not None:
             if (
                 args["chunk_unit"] == "KiB"
                 or args["chunk_unit"] == "MiB"
@@ -102,56 +102,58 @@ class DFCCli:
             self.chunk_size = 1024
             self.chunk_unit = "KiB"
 
-        if args["verbose"] != None:
+        if args["verbose"] is not None:
             self.verbose = bool(args["verbose"])
         else:
             self.verbose = None
 
-        if args["progressbar"] != None:
+        if args["progressbar"] is not None:
             self.progressbar = bool(args["progressbar"])
         else:
             self.progressbar = None
 
-        if args["log"] != None:
+        if args["log"] is not None:
             self.log_path = f"{args['log']}"
         else:
             self.log_path = None
 
-        if args["hash"] != None:
-            self.log_hash = bool(args['hash'])
+        if args["hash"] is not None:
+            self.log_hash = bool(args["hash"])
         else:
             self.log_hash = None
+
+        self.files_creator = None
+        self.pbar_total = None
+        self.pbar_file = None
 
     def print_progress(
         self,
         n_created: int,
-        number_files: int,
         file_name: str,
         chunk_n: int,
-        number_of_chunks: int,
     ):
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
         if self.verbose:
             self.pbar_file.n = chunk_n
-            self.pbar_file.set_description("%s" % file_name)
+            self.pbar_file.set_description(f"{file_name}")
             self.pbar_file.refresh()
 
     def error_function(self, error_message: str):
-        if hasattr(self, "pbar_total"):
+        if self.pbar_total is not None:
             self.pbar_total.close()
-        if hasattr(self, "pbar_file"):
+        if self.pbar_file is not None:
             self.pbar_file.close()
         print("\r" + error_message)
         sys.exit(1)
 
     def complete_function(self):
-        if hasattr(self, "pbar_total"):
+        if self.pbar_total is not None:
             self.pbar_total.close()
-        if hasattr(self, "pbar_file"):
+        if self.pbar_file is not None:
             self.pbar_file.close()
         print(f"\r{self.number_files} file(s) created in {self.folder_path}")
-        if self.log_path != None:
+        if self.log_path is not None:
             print(f"Log file saved to {self.log_path}")
 
     def run(self):
@@ -198,6 +200,6 @@ class DFCCli:
                 )
 
             self.files_creator.start()
-        except IOError as e:
-            print(f"CLI: Error starting FilesCreator thread: {e}")
+        except IOError as error:
+            print(f"CLI: Error starting FilesCreator thread: {error}")
             sys.exit(1)

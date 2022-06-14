@@ -12,24 +12,24 @@ For a bash-based (more performatic) solution, see [this project](https://github.
 
 Pre-compiled packages are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
-### Cross-platform
+### Cross-platform (recommended)
 
 Install via pip:
 
-```
+```sh
 pip3 install dummyfilescreator
 ```
 
 or, install as a local package:
 
-```
+```sh
 git clone https://github.com/matuzalemmuller/dummy-files-creator
 python3 setup.py install
 ```
 
 or, don't install, and just run as a regular python program:
 
-```
+```sh
 git clone https://github.com/matuzalemmuller/dummy-files-creator
 pip3 install -r requirements.txt
 python3 dummyfilescreator.py
@@ -39,8 +39,8 @@ python3 dummyfilescreator.py
 
 Download the latest executable from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
-* The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
-* The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
+  * The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
+  * The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
 
 ### Linux
 
@@ -49,7 +49,8 @@ Download the latest executable from the [releases page](https://github.com/matuz
 ### macOS
 
 Download the latest `.dmg` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-* Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
+
+  * Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
 ## Usage
 
@@ -82,9 +83,9 @@ Example:
 
 * Create 5 files of 80 MiB each, show the individual file creation progress (verbose output), and save the log file with md5 hash to /tmp.
 
-[![Recording](./doc/recording.gif)](https://asciinema.org/a/0o0rgu5yX0AlutxZzwdTjpRZk)
+[![Recording](./doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
 
-```
+```sh
 $ dummyfilescreator -o=/tmp -n=5 -fs=80 -fu=MiB -cs=1 -cu=MiB -l=/tmp -ha -v
 5 file(s) created in /tmp
 Log file saved to /tmp

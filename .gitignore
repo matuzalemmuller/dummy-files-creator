@@ -3,6 +3,7 @@ __pycache__
 
 # virtualenv
 /env
+/venv
 
 # Local releases
 *egg-info
@@ -14,3 +15,6 @@ __pycache__
 /pkg/linux/logs
 /pkg/linux/dummyfilescreator.deb
 /pkg/linux/dummyfilescreator.rpm
+
+# Local notes
+TODO.md

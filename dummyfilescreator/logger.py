@@ -5,6 +5,9 @@ import logging
 from logging.handlers import RotatingFileHandler
 import uuid
 
+FILE_SIZE = 0
+HASH = 0
+
 
 class CsvFormatter(logging.Formatter):
     def __init__(self):
@@ -24,10 +27,8 @@ class CsvFormatter(logging.Formatter):
 
 class CustomFilter(logging.Filter):
     def filter(self, record):
-        global file_size
-        record.file_size = file_size
-        global hash
-        record.hash = hash
+        record.file_size = FILE_SIZE
+        record.hash = HASH
         return True
 
 
@@ -47,15 +48,15 @@ class Logger:
             csv_format = CsvFormatter()
             log_handler.setFormatter(csv_format)
             self.logger.addHandler(log_handler)
-        except IOError as e:
-            raise e
+        except IOError as error:
+            raise error
 
     def log(self, f_path, f_size, f_hash=None):
-        global file_size
-        file_size = f_size
-        global hash
-        hash = f_hash
+        global FILE_SIZE
+        FILE_SIZE = f_size
+        global HASH
+        HASH = f_hash
         try:
             self.logger.info(f_path)
-        except IOError as e:
-            raise e
+        except IOError as error:
+            raise error

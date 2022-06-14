@@ -9,6 +9,7 @@ def main():
 
         app = QApplication(sys.argv)
         window = DFCUi()
+        window.show()
         app.exec_()
     else:
         from .dfc_cli import DFCCli

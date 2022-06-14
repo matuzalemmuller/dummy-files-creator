@@ -1,7 +1,10 @@
-import os
-import sys
 import unittest
-from .common_lib import *
+from .common_lib import (
+    create_data_folder,
+    delete_data_folder,
+    create_test_files,
+    log_file_exists,
+)
 
 
 class TestLogCreation(unittest.TestCase):

@@ -1,20 +1,20 @@
 #! /usr/bin/env python3
 import math
 import sys
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
+from PyQt5.QtGui import QIcon, QRegExpValidator
+from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
 from . import qt_icon
 from .files_creator import FilesCreator
 from .qt_main_window import UiMainWindow
 from .qt_about_window import UiAbout
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
-from PyQt5.QtGui import QIcon, QRegExpValidator
-from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
 
 
 class About(QDialog):
     __slots__ = "about_window"
 
     def __init__(self):
-        super(About, self).__init__()
+        super().__init__()
         self.about_window = UiAbout()
         self.about_window.setupUi(self)
         self.setWindowIcon(QIcon(":/icon.png"))
@@ -26,12 +26,12 @@ class About(QDialog):
 class DFCUi(QMainWindow):
     __slots__ = "main_window", "creator_thread"
 
-    signal_update_progress = pyqtSignal(int, int, str, int, int)
+    signal_update_progress = pyqtSignal(int, str, int)
     signal_error = pyqtSignal(str)
     signal_complete = pyqtSignal()
 
     def __init__(self):
-        super(DFCUi, self).__init__()
+        super().__init__()
         self.main_window = UiMainWindow()
         self.main_window.setupUi(self)
         self.setWindowIcon(QIcon(":/icon.png"))
@@ -41,7 +41,7 @@ class DFCUi(QMainWindow):
         self.__set_connect()
         self.__enable_create_button()
         self.__change_ui("enabled")
-        self.show()  # Show the GUI
+        self.show()
 
     def __about_action(self):
         About()
@@ -116,18 +116,18 @@ class DFCUi(QMainWindow):
         else:
             self.main_window.button_create_stop.setDisabled(True)
 
-    @pyqtSlot(int, int, str, int, int)
+    @pyqtSlot(int, str, int)
     def __update_progress_bar(
         self,
         created_files: int,
-        total_files: int,
         file_name: str = None,
         current_chunk: int = None,
-        total_chunks: int = None,
     ):
         if self.main_window.checkbox_verbose.isChecked():
             created_files -= 1
-        self.main_window.label_progress.setText(f"{created_files}/{total_files}")
+        self.main_window.label_progress.setText(
+            f"{created_files}/{self.main_window.text_n_files.text()}"
+        )
         self.main_window.progress_bar.setValue(created_files)
         if self.main_window.checkbox_verbose.isChecked():
             self.main_window.label_verbose_information.setText(f"Creating {file_name}")
@@ -160,14 +160,10 @@ class DFCUi(QMainWindow):
     def emit_progress_bar_update(
         self,
         n_created: int,
-        number_files: int,
         file_name: str,
         chunk_n: int,
-        number_of_chunks: int,
     ):
-        self.signal_update_progress.emit(
-            n_created, number_files, file_name, chunk_n, number_of_chunks
-        )
+        self.signal_update_progress.emit(n_created, file_name, chunk_n)
 
     def emit_error_window(self, error_message: str):
         self.signal_error.emit(error_message)
@@ -213,12 +209,12 @@ class DFCUi(QMainWindow):
             or len(self.main_window.text_chunk_size.text()) <= 0
         ):
             return
-        elif (
+        if (
             self.main_window.checkbox_savelog.isChecked()
             and len(self.main_window.text_logfilepath.text()) <= 0
         ):
             return
-        elif self.main_window.button_create_stop.text() == "Create":
+        if self.main_window.button_create_stop.text() == "Create":
             folder_path = self.main_window.text_path.text()
             number_files = int(self.main_window.text_n_files.text())
             size_file = int(self.main_window.text_size_files.text())
@@ -276,8 +272,8 @@ class DFCUi(QMainWindow):
                 self.main_window.label_progress.setText(f"0/{number_files}")
 
                 self.creator_thread.start()
-            except IOError as e:
-                print(f"UI: Error starting FilesCreator thread: {e}")
+            except IOError as error:
+                print(f"UI: Error starting FilesCreator thread: {error}")
                 return
             self.__change_ui(state="disabled")
         else:
@@ -348,12 +344,12 @@ class DFCUi(QMainWindow):
                 self.main_window.widget_log.show()
             else:
                 self.main_window.widget_log.hide()
-        return
 
 
 def main():
     app = QApplication(sys.argv)
     window = DFCUi()
+    window.show()
     app.exec_()
 
 
