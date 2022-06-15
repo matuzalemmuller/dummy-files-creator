@@ -1,16 +1,34 @@
 #! /usr/bin/env python3
+"""
+Author: Matuzalem (Mat) Muller
+License: GPLv3
+"""
 import math
 import sys
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt # pylint: disable=no-name-in-module
-from PyQt5.QtGui import QIcon, QRegExpValidator # pylint: disable=no-name-in-module
-from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox # pylint: disable=no-name-in-module
+from PyQt5.QtCore import ( # pylint: disable=no-name-in-module
+    pyqtSignal,
+    pyqtSlot,
+    QRegExp,
+    Qt,
+)
+from PyQt5.QtGui import QIcon, QRegExpValidator  # pylint: disable=no-name-in-module
+from PyQt5.QtWidgets import ( # pylint: disable=no-name-in-module
+    QApplication,
+    QDialog,
+    QFileDialog,
+    QMainWindow,
+    QMessageBox,
+)
 from .files_creator import FilesCreator
 from .qt_about_window import UiAbout
 from .qt_main_window import UiMainWindow
-from . import qt_icon # pylint: disable=unused-import
+from . import qt_icon  # pylint: disable=unused-import
 
 
 class About(QDialog):
+    """
+    Displays "About" window.
+    """
     __slots__ = "about_window"
 
     def __init__(self):
@@ -24,6 +42,9 @@ class About(QDialog):
 
 
 class DFCUi(QMainWindow):
+    """
+    Launches application window.
+    """
     __slots__ = "main_window", "creator_thread"
 
     signal_update_progress = pyqtSignal(int, str, int)
@@ -163,12 +184,30 @@ class DFCUi(QMainWindow):
         file_name: str,
         chunk_n: int,
     ):
+        """
+        Emits signal to update progress bars while files are created.
+        The signal invokes the method self.__update_progress_bar
+        This function is necessary because files_creator does not emit signals
+        and it cannot draw/modify the QMainWindow from this class.
+        """
         self.signal_update_progress.emit(n_created, file_name, chunk_n)
 
     def emit_error_window(self, error_message: str):
+        """
+        Emits signal to display message when an error happens during file creation.
+        The signal invokes the method self.__display_error_message
+        This function is necessary because files_creator does not emit signals
+        and it cannot draw/modify the QMainWindow from this class.
+        """
         self.signal_error.emit(error_message)
 
     def emit_display_success_message(self):
+        """
+        Emits signal shows completion message when all files are created.
+        The signal invokes the method self.__display_success_message
+        This function is necessary because files_creator does not emit signals
+        and it cannot draw/modify the QMainWindow from this class.
+        """
         self.signal_complete.emit()
 
     def __hide_widget_log_options(self):
@@ -201,7 +240,7 @@ class DFCUi(QMainWindow):
         else:
             sys.exit(0)
 
-    def __click_button_create_stop(self):
+    def __click_button_create_stop(self): # pylint: disable=too-many-branches
         if (
             len(self.main_window.text_path.text()) <= 0
             or len(self.main_window.text_n_files.text()) <= 0
@@ -215,46 +254,40 @@ class DFCUi(QMainWindow):
         ):
             return
         if self.main_window.button_create_stop.text() == "Create":
-            folder_path = self.main_window.text_path.text()
-            number_files = int(self.main_window.text_n_files.text())
             size_file = int(self.main_window.text_size_files.text())
-            size_unit = self.main_window.combo_file_unit.currentText()
             chunk_size = int(self.main_window.text_chunk_size.text())
-            chunk_unit = self.main_window.combo_chunk_unit.currentText()
-            verbose = self.main_window.checkbox_verbose.isChecked()
-            log_hash = self.main_window.checkbox_md5hash.isChecked()
             if self.main_window.checkbox_savelog.isChecked():
                 log_path = self.main_window.text_logfilepath.text()
             else:
                 log_path = None
             try:
                 self.creator_thread = FilesCreator(
-                    folder_path=folder_path,
-                    number_files=number_files,
+                    folder_path=self.main_window.text_path.text(),
+                    number_files=int(self.main_window.text_n_files.text()),
                     size_file=size_file,
-                    size_unit=size_unit,
+                    size_unit=self.main_window.combo_file_unit.currentText(),
                     chunk_size=chunk_size,
-                    chunk_unit=chunk_unit,
-                    verbose=verbose,
+                    chunk_unit=self.main_window.combo_chunk_unit.currentText(),
+                    verbose=self.main_window.checkbox_verbose.isChecked(),
                     log_path=log_path,
-                    log_hash=log_hash,
+                    log_hash=self.main_window.checkbox_md5hash.isChecked(),
                     update_function=self.emit_progress_bar_update,
                     complete_function=self.emit_display_success_message,
                     error_function=self.emit_error_window,
                 )
 
-                if size_unit == "KiB":
+                if self.main_window.combo_file_unit.currentText() == "KiB":
                     size_mult = 1
-                elif size_unit == "MiB":
+                elif self.main_window.combo_file_unit.currentText() == "MiB":
                     size_mult = 2
-                elif size_unit == "GiB":
+                else:
                     size_mult = 3
 
-                if chunk_unit == "KiB":
+                if self.main_window.combo_chunk_unit.currentText() == "KiB":
                     chunk_mult = 1
-                elif chunk_unit == "MiB":
+                elif self.main_window.combo_chunk_unit.currentText() == "MiB":
                     chunk_mult = 2
-                elif chunk_unit == "GiB":
+                else:
                     chunk_mult = 3
 
                 file_size_bytes = math.ceil(size_file * (1024**size_mult))
@@ -267,9 +300,9 @@ class DFCUi(QMainWindow):
                 else:
                     number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
 
-                self.main_window.progress_bar.setMaximum(number_files)
+                self.main_window.progress_bar.setMaximum(int(self.main_window.text_n_files.text()))
                 self.main_window.progress_bar_verbose.setMaximum(number_of_chunks)
-                self.main_window.label_progress.setText(f"0/{number_files}")
+                self.main_window.label_progress.setText(f"0/{self.main_window.text_n_files.text()}")
 
                 self.creator_thread.start()
             except IOError as error:
@@ -287,7 +320,7 @@ class DFCUi(QMainWindow):
                 self.creator_thread.kill()
                 self.__change_ui(state="enabled")
 
-    def __change_ui(self, state: str):
+    def __change_ui(self, state: str): # pylint: disable=too-many-statements
         if state == "disabled":
             self.main_window.label_path.setDisabled(True)
             self.main_window.label_n_files.setDisabled(True)
@@ -347,6 +380,9 @@ class DFCUi(QMainWindow):
 
 
 def main():
+    """
+    Main function in case this file is executed directly.
+    """
     app = QApplication(sys.argv)
     window = DFCUi()
     window.show()

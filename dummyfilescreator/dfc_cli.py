@@ -1,3 +1,7 @@
+"""
+Author: Matuzalem (Mat) Muller
+License: GPLv3
+"""
 import argparse
 import sys
 from tqdm import tqdm
@@ -5,6 +9,9 @@ from .files_creator import FilesCreator
 
 
 class DFCCli:
+    """
+    Class that provides CLI support.
+    """
     __slots__ = (
         "folder_path",
         "number_files",
@@ -21,9 +28,10 @@ class DFCCli:
         "files_creator",
     )
 
-    def __init__(self):
+    def __init__(self):  # pylint: disable=too-many-branches
         parser = argparse.ArgumentParser(
-            description="Application to generate dummy files. Run without arguments to start in GUI mode or include arguments to use CLI mode."
+            description="""Application to generate dummy files. Run without arguments to start
+            in GUI mode or include arguments to use CLI mode."""
         )
         parser.add_argument(
             "--output", "-o", required=True, help="Location where files will be created"
@@ -132,6 +140,9 @@ class DFCCli:
         file_name: str,
         chunk_n: int,
     ):
+        """
+        Updates progress bars while files are created.
+        """
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
         if self.verbose:
@@ -140,6 +151,9 @@ class DFCCli:
             self.pbar_file.refresh()
 
     def error_function(self, error_message: str):
+        """
+        Displays message when an error happens during file creation.
+        """
         if self.pbar_total is not None:
             self.pbar_total.close()
         if self.pbar_file is not None:
@@ -148,6 +162,9 @@ class DFCCli:
         sys.exit(1)
 
     def complete_function(self):
+        """
+        Shows completion message when all files are created.
+        """
         if self.pbar_total is not None:
             self.pbar_total.close()
         if self.pbar_file is not None:
@@ -157,6 +174,9 @@ class DFCCli:
             print(f"Log file saved to {self.log_path}")
 
     def run(self):
+        """
+        Starts the file creation process.
+        """
         try:
             if self.progressbar or self.verbose:
                 self.files_creator = FilesCreator(

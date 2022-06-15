@@ -16,7 +16,7 @@ Both GUI and CLI modes are available. Note that CLI mode is recommended for crea
 
 To use the GUI mode, start `dummyfilescreator` without arguments. This mode is **not** recommended for creating large datasets.
 
-![Dummy Files Creator](./screenshot.png)
+![Dummy Files Creator](https://raw.githubusercontent.com/matuzalemmuller/dummy-files-creator/master/doc/screenshot.png)
 
 ### CLI mode
 
@@ -39,7 +39,7 @@ Example:
 
 *   Create 5 files of 80 MiB each, show the individual file creation progress, and save the log file with md5 hash to /tmp.
 
-[![Recording](./recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
+[![Recording](https://raw.githubusercontent.com/matuzalemmuller/dummy-files-creator/master/doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
 
 ```sh
 $ dummyfilescreator -o=/tmp -n=5 -fs=80 -fu=MiB -cs=1 -cu=MiB -l=/tmp -ha -v

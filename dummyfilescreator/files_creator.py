@@ -1,3 +1,7 @@
+"""
+Author: Matuzalem (Mat) Muller
+License: GPLv3
+"""
 import hashlib
 import math
 import os
@@ -6,7 +10,10 @@ import uuid
 from .logger import Logger
 
 
-class FilesCreator(threading.Thread):
+class FilesCreator(threading.Thread): # pylint: disable=too-many-instance-attributes
+    """
+    Creates files.
+    """
     __slots__ = (
         "folder_path",
         "number_files",
@@ -24,7 +31,7 @@ class FilesCreator(threading.Thread):
         "logger",
     )
 
-    def __init__(
+    def __init__( # pylint: disable=too-many-arguments, too-many-locals, too-many-branches
         self,
         folder_path: str,
         number_files: int,
@@ -90,46 +97,56 @@ class FilesCreator(threading.Thread):
                     self.error_function(f"Error saving log file: {error}")
                 raise error
 
+    def __write_log(self, file_path):
+        try:
+            with open(file_path, "rb") as fout:
+                if self.log_hash:
+                    f_bytes = fout.read()
+                    hash_result = hashlib.md5(f_bytes).hexdigest()
+                    self.logger.log(file_path, self.readable_size, hash_result)
+                else:
+                    self.logger.log(file_path, self.readable_size, "")
+            return True
+        except IOError as error:
+            if self.error_function:
+                self.error_function(f"Error saving log: {error}")
+            return False
+
+    def __create_file(self, file_path, n_created, file_name):
+        try:
+            with open(file_path, "wb") as fout:
+                if self.verbose:
+                    for chunk_n in range(1, self.number_of_chunks + 1):
+                        if self.abort is True:
+                            os.remove(file_path)
+                            return False
+                        fout.write(os.urandom(self.chunk_size_bytes))
+                        if self.update_function:
+                            self.update_function(
+                                n_created,
+                                file_name,
+                                chunk_n,
+                            )
+                else:
+                    for _ in range(self.number_of_chunks):
+                        if self.abort is True:
+                            os.remove(file_path)
+                            return False
+                        fout.write(os.urandom(self.chunk_size_bytes))
+        except IOError as error:
+            if self.error_function:
+                self.error_function(f"Error creating file: {error}")
+            return False
+        return True
+
     def run(self):
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
-            try:
-                with open(file_path, "wb") as fout:
-                    if self.verbose:
-                        for chunk_n in range(1, self.number_of_chunks + 1):
-                            if self.abort is True:
-                                os.remove(file_path)
-                                return False
-                            fout.write(os.urandom(self.chunk_size_bytes))
-                            if self.update_function:
-                                self.update_function(
-                                    n_created,
-                                    file_name,
-                                    chunk_n,
-                                )
-                    else:
-                        for _ in range(self.number_of_chunks):
-                            if self.abort is True:
-                                os.remove(file_path)
-                                return False
-                            fout.write(os.urandom(self.chunk_size_bytes))
-            except IOError as error:
-                if self.error_function:
-                    self.error_function(f"Error creating file: {error}")
+            if not self.__create_file(file_path, n_created, file_name):
                 return False
             if self.log_path:
-                try:
-                    with open(file_path, "rb") as fout:
-                        if self.log_hash:
-                            f_bytes = fout.read()
-                            hash_result = hashlib.md5(f_bytes).hexdigest()
-                            self.logger.log(file_path, self.readable_size, hash_result)
-                        else:
-                            self.logger.log(file_path, self.readable_size, "")
-                except IOError as error:
-                    if self.error_function:
-                        self.error_function(f"Error saving log: {error}")
+                if not self.__write_log(file_path):
                     return False
             if self.abort is True:
                 return False
@@ -142,4 +159,7 @@ class FilesCreator(threading.Thread):
         return True
 
     def kill(self):
+        """
+        Sets the abort flag to true, which will stop the thread execution loop.
+        """
         self.abort = True

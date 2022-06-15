@@ -1,3 +1,7 @@
+"""
+Author: Matuzalem (Mat) Muller
+License: GPLv3
+"""
 import csv
 import datetime
 import io
@@ -10,6 +14,9 @@ HASH = 0
 
 
 class CsvFormatter(logging.Formatter):
+    """
+    Formats log entry as csv.
+    """
     def __init__(self):
         super().__init__()
         self.output = io.StringIO()
@@ -25,14 +32,20 @@ class CsvFormatter(logging.Formatter):
         return data.strip()
 
 
-class CustomFilter(logging.Filter):
+class CustomFilter(logging.Filter): # pylint: disable=too-few-public-methods
+    """
+    Custom filter to save file size and hash to log file.
+    """
     def filter(self, record):
         record.file_size = FILE_SIZE
         record.hash = HASH
         return True
 
 
-class Logger:
+class Logger: # pylint: disable=too-few-public-methods
+    """
+    Logger class, to be used by classes that want to save log entries to file.
+    """
     def __init__(self, log_path, error_function=None):
         self.error_function = error_function
         self.logger = logging.getLogger(str(uuid.uuid4()))
@@ -52,9 +65,12 @@ class Logger:
             raise error
 
     def log(self, f_path, f_size, f_hash=None):
-        global FILE_SIZE
+        """
+        Saves log entry to log file.
+        """
+        global FILE_SIZE # pylint: disable=global-statement
         FILE_SIZE = f_size
-        global HASH
+        global HASH # pylint: disable=global-statement
         HASH = f_hash
         try:
             self.logger.info(f_path)
