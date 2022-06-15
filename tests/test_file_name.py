@@ -25,7 +25,7 @@ class TestFileName(unittest.TestCase):
             print(f"error: {error}")
             return False
 
-    def test_file_hash(self):
+    def test_file_name(self):
         self.assertTrue(create_data_folder())
         self.assertTrue(create_test_files(1))
         self.assertTrue(self.__match_file_name_with_log())

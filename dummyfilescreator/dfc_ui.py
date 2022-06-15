@@ -1,13 +1,13 @@
 #! /usr/bin/env python3
 import math
 import sys
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt
-from PyQt5.QtGui import QIcon, QRegExpValidator
-from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox
-from . import qt_icon
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QRegExp, Qt # pylint: disable=no-name-in-module
+from PyQt5.QtGui import QIcon, QRegExpValidator # pylint: disable=no-name-in-module
+from PyQt5.QtWidgets import QApplication, QDialog, QFileDialog, QMainWindow, QMessageBox # pylint: disable=no-name-in-module
 from .files_creator import FilesCreator
-from .qt_main_window import UiMainWindow
 from .qt_about_window import UiAbout
+from .qt_main_window import UiMainWindow
+from . import qt_icon # pylint: disable=unused-import
 
 
 class About(QDialog):
