@@ -12,6 +12,7 @@ from .logger import Logger
 
 
 class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attributes
+
     """Creates files."""
 
     __slots__ = (

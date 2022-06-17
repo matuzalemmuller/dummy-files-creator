@@ -27,6 +27,7 @@ from . import qt_icon  # pylint: disable=unused-import
 
 
 class About(QDialog):
+
     """Displays About window."""
 
     __slots__ = ("about_window")

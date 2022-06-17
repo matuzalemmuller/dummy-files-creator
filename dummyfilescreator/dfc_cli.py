@@ -9,7 +9,8 @@ from tqdm import tqdm
 from .files_creator import FilesCreator
 
 
-class DFCCli:
+class DFCCli: # pylint: disable=too-many-instance-attributes
+
     """Class that provides CLI support."""
 
     __slots__ = (
