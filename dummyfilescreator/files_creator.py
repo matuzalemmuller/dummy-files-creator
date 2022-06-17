@@ -1,6 +1,5 @@
-"""
+"""Author: Matuzalem (Mat) Muller.
 
-Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 import hashlib
@@ -12,7 +11,6 @@ from .logger import Logger
 
 
 class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attributes
-
     """Creates files."""
 
     __slots__ = (
@@ -47,10 +45,7 @@ class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attri
         update_function=None,
         error_function=None,
     ):
-        """
-        Saves parameters to internal atributes and computes how many chunks
-        should be created per file.
-        """
+        """Save parameters to internal atributes and computes how many chunks should be created per file.""" # pylint: disable=line-too-long
         super().__init__()
         self.folder_path = folder_path
         self.number_files = number_files
@@ -145,6 +140,7 @@ class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attri
         return True
 
     def run(self):
+        """Start file creation."""
         for n_created in range(1, self.number_files + 1):
             file_name = f"{uuid.uuid4()}.dummy"
             file_path = f"{self.folder_path}/{file_name}"
@@ -164,7 +160,5 @@ class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attri
         return True
 
     def kill(self):
-        """
-        Sets the abort flag to true, which will stop the thread execution loop.
-        """
+        """Set the abort flag to true, which will stop the thread execution loop."""
         self.abort = True

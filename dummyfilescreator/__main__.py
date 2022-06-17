@@ -1,15 +1,15 @@
 #! /usr/bin/env python3
-"""
+"""Author: Matuzalem (Mat) Muller.
 
-Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 import sys
 
 
 def main():
-    """
-    Main function. If no parameters are provided, start in GUI mode. Otherwise,
+    """Entrypoint.
+
+    If no parameters are provided, start in GUI mode. Otherwise,
     run in CLI mode. The imports are done according to the execution mode: if
     CLI mode is used it is not necessary to import all the PyQt libraries.
     """

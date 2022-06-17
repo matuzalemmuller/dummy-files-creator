@@ -1,6 +1,5 @@
-"""
+"""Author: Matuzalem (Mat) Muller.
 
-Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 import argparse
@@ -10,7 +9,6 @@ from .files_creator import FilesCreator
 
 
 class DFCCli: # pylint: disable=too-many-instance-attributes
-
     """Class that provides CLI support."""
 
     __slots__ = (
@@ -30,7 +28,7 @@ class DFCCli: # pylint: disable=too-many-instance-attributes
     )
 
     def __init__(self):  # pylint: disable=too-many-branches
-        """Saves arguments to internal atributes."""
+        """Save arguments to internal atributes."""
         parser = argparse.ArgumentParser(
             description="""Application to generate dummy files. Run without arguments to start
             in GUI mode or include arguments to use CLI mode."""
@@ -142,9 +140,7 @@ class DFCCli: # pylint: disable=too-many-instance-attributes
         file_name: str,
         chunk_n: int,
     ):
-        """
-        Updates progress bars while files are created.
-        """
+        """Update progress bars while files are created."""
         self.pbar_total.n = n_created
         self.pbar_total.refresh()
         if self.verbose:
@@ -153,9 +149,7 @@ class DFCCli: # pylint: disable=too-many-instance-attributes
             self.pbar_file.refresh()
 
     def error_function(self, error_message: str):
-        """
-        Displays message when an error happens during file creation.
-        """
+        """Display message when an error happens during file creation."""
         if self.pbar_total is not None:
             self.pbar_total.close()
         if self.pbar_file is not None:
@@ -164,9 +158,7 @@ class DFCCli: # pylint: disable=too-many-instance-attributes
         sys.exit(1)
 
     def complete_function(self):
-        """
-        Shows completion message when all files are created.
-        """
+        """Show completion message when all files are created."""
         if self.pbar_total is not None:
             self.pbar_total.close()
         if self.pbar_file is not None:
@@ -176,9 +168,7 @@ class DFCCli: # pylint: disable=too-many-instance-attributes
             print(f"Log file saved to {self.log_path}")
 
     def run(self):
-        """
-        Starts the file creation process.
-        """
+        """Start the file creation process."""
         try:
             if self.progressbar or self.verbose:
                 self.files_creator = FilesCreator(

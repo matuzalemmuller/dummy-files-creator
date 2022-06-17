@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
-"""
+"""Author: Matuzalem (Mat) Muller.
 
-Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 import math
@@ -27,12 +26,12 @@ from . import qt_icon  # pylint: disable=unused-import
 
 
 class About(QDialog):
-
     """Displays About window."""
 
     __slots__ = ("about_window")
 
     def __init__(self):
+        """Import Qt resource for icon and display the QDialog."""
         super().__init__()
         self.about_window = UiAbout()
         self.about_window.setupUi(self)
@@ -43,9 +42,7 @@ class About(QDialog):
 
 
 class DFCUi(QMainWindow):
-    """
-    Launches application window.
-    """
+    """Launch application window."""
 
     __slots__ = ("main_window", "creator_thread")
 
@@ -54,6 +51,7 @@ class DFCUi(QMainWindow):
     signal_complete = pyqtSignal()
 
     def __init__(self):
+        """Import Qt resource for icon and window UI, connect signals and display window."""
         super().__init__()
         self.main_window = UiMainWindow()
         self.main_window.setupUi(self)
@@ -186,8 +184,8 @@ class DFCUi(QMainWindow):
         file_name: str,
         chunk_n: int,
     ):
-        """
-        Emits signal to update progress bars while files are created.
+        """Emit signal to update progress bars while files are created.
+
         The signal invokes the method self.__update_progress_bar
         This function is necessary because files_creator does not emit signals
         and it cannot draw/modify the QMainWindow from this class.
@@ -195,8 +193,8 @@ class DFCUi(QMainWindow):
         self.signal_update_progress.emit(n_created, file_name, chunk_n)
 
     def emit_error_window(self, error_message: str):
-        """
-        Emits signal to display message when an error happens during file creation.
+        """Emit signal to display message when an error happens during file creation.
+
         The signal invokes the method self.__display_error_message
         This function is necessary because files_creator does not emit signals
         and it cannot draw/modify the QMainWindow from this class.
@@ -204,8 +202,8 @@ class DFCUi(QMainWindow):
         self.signal_error.emit(error_message)
 
     def emit_display_success_message(self):
-        """
-        Emits signal shows completion message when all files are created.
+        """Emit signal shows completion message when all files are created.
+
         The signal invokes the method self.__display_success_message
         This function is necessary because files_creator does not emit signals
         and it cannot draw/modify the QMainWindow from this class.
@@ -386,9 +384,7 @@ class DFCUi(QMainWindow):
 
 
 def main():
-    """
-    Main function in case this file is executed directly.
-    """
+    """Entrypoint in case this file is executed directly."""
     app = QApplication(sys.argv)
     window = DFCUi()
     window.show()

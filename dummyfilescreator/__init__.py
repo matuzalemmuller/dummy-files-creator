@@ -1,6 +1,5 @@
-"""
+"""Author: Matuzalem (Mat) Muller.
 
-Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 __version__ = "3.0.0"
