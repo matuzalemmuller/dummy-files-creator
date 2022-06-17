@@ -11,7 +11,10 @@ from .common_lib import (
 
 
 class TestFileHash(unittest.TestCase):
-    def __match_file_hash_with_log(self):
+
+    def test_file_hash(self):
+        self.assertTrue(create_data_folder())
+        self.assertTrue(create_test_files(1))
         try:
             with open(
                 f"{TEST_DATA_DIR}/dummy-files-creator.csv", mode="r", encoding="utf-8"
@@ -23,15 +26,7 @@ class TestFileHash(unittest.TestCase):
                     with open(file_path, "rb") as fout:
                         f_bytes = fout.read()
                         hash_result = hashlib.md5(f_bytes).hexdigest()
-                        return file_hash == hash_result
-                else:
-                    return False
+                        self.assertEqual(file_hash, hash_result)
         except IOError as error:
             print(f"error: {error}")
-            return False
-
-    def test_file_hash(self):
-        self.assertTrue(create_data_folder())
-        self.assertTrue(create_test_files(1))
-        self.assertTrue(self.__match_file_hash_with_log())
         self.assertTrue(delete_data_folder())
