@@ -1,4 +1,5 @@
 """
+
 Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
@@ -9,9 +10,8 @@ from .files_creator import FilesCreator
 
 
 class DFCCli:
-    """
-    Class that provides CLI support.
-    """
+    """Class that provides CLI support."""
+
     __slots__ = (
         "folder_path",
         "number_files",
@@ -29,6 +29,7 @@ class DFCCli:
     )
 
     def __init__(self):  # pylint: disable=too-many-branches
+        """Saves arguments to internal atributes."""
         parser = argparse.ArgumentParser(
             description="""Application to generate dummy files. Run without arguments to start
             in GUI mode or include arguments to use CLI mode."""

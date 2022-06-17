@@ -1,18 +1,19 @@
 #! /usr/bin/env python3
 """
+
 Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
 import math
 import sys
-from PyQt5.QtCore import ( # pylint: disable=no-name-in-module
+from PyQt5.QtCore import (  # pylint: disable=no-name-in-module
     pyqtSignal,
     pyqtSlot,
     QRegExp,
     Qt,
 )
 from PyQt5.QtGui import QIcon, QRegExpValidator  # pylint: disable=no-name-in-module
-from PyQt5.QtWidgets import ( # pylint: disable=no-name-in-module
+from PyQt5.QtWidgets import (  # pylint: disable=no-name-in-module
     QApplication,
     QDialog,
     QFileDialog,
@@ -26,10 +27,9 @@ from . import qt_icon  # pylint: disable=unused-import
 
 
 class About(QDialog):
-    """
-    Displays "About" window.
-    """
-    __slots__ = "about_window"
+    """Displays About window."""
+
+    __slots__ = ("about_window")
 
     def __init__(self):
         super().__init__()
@@ -45,7 +45,8 @@ class DFCUi(QMainWindow):
     """
     Launches application window.
     """
-    __slots__ = "main_window", "creator_thread"
+
+    __slots__ = ("main_window", "creator_thread")
 
     signal_update_progress = pyqtSignal(int, str, int)
     signal_error = pyqtSignal(str)
@@ -240,7 +241,7 @@ class DFCUi(QMainWindow):
         else:
             sys.exit(0)
 
-    def __click_button_create_stop(self): # pylint: disable=too-many-branches
+    def __click_button_create_stop(self):  # pylint: disable=too-many-branches
         if (
             len(self.main_window.text_path.text()) <= 0
             or len(self.main_window.text_n_files.text()) <= 0
@@ -300,9 +301,13 @@ class DFCUi(QMainWindow):
                 else:
                     number_of_chunks = math.ceil(file_size_bytes / chunk_size_bytes)
 
-                self.main_window.progress_bar.setMaximum(int(self.main_window.text_n_files.text()))
+                self.main_window.progress_bar.setMaximum(
+                    int(self.main_window.text_n_files.text())
+                )
                 self.main_window.progress_bar_verbose.setMaximum(number_of_chunks)
-                self.main_window.label_progress.setText(f"0/{self.main_window.text_n_files.text()}")
+                self.main_window.label_progress.setText(
+                    f"0/{self.main_window.text_n_files.text()}"
+                )
 
                 self.creator_thread.start()
             except IOError as error:
@@ -320,7 +325,7 @@ class DFCUi(QMainWindow):
                 self.creator_thread.kill()
                 self.__change_ui(state="enabled")
 
-    def __change_ui(self, state: str): # pylint: disable=too-many-statements
+    def __change_ui(self, state: str):  # pylint: disable=too-many-statements
         if state == "disabled":
             self.main_window.label_path.setDisabled(True)
             self.main_window.label_n_files.setDisabled(True)

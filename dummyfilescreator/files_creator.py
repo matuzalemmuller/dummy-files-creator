@@ -1,4 +1,5 @@
 """
+
 Author: Matuzalem (Mat) Muller
 License: GPLv3
 """
@@ -10,10 +11,9 @@ import uuid
 from .logger import Logger
 
 
-class FilesCreator(threading.Thread): # pylint: disable=too-many-instance-attributes
-    """
-    Creates files.
-    """
+class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attributes
+    """Creates files."""
+
     __slots__ = (
         "folder_path",
         "number_files",
@@ -31,7 +31,7 @@ class FilesCreator(threading.Thread): # pylint: disable=too-many-instance-attrib
         "logger",
     )
 
-    def __init__( # pylint: disable=too-many-arguments, too-many-locals, too-many-branches
+    def __init__(  # pylint: disable=too-many-arguments, too-many-locals, too-many-branches
         self,
         folder_path: str,
         number_files: int,
@@ -46,6 +46,10 @@ class FilesCreator(threading.Thread): # pylint: disable=too-many-instance-attrib
         update_function=None,
         error_function=None,
     ):
+        """
+        Saves parameters to internal atributes and computes how many chunks
+        should be created per file.
+        """
         super().__init__()
         self.folder_path = folder_path
         self.number_files = number_files
