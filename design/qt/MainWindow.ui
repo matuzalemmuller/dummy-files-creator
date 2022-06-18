@@ -257,7 +257,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>65</width>
             <height>23</height>
            </size>
           </property>
@@ -295,13 +295,13 @@
          <widget class="QCheckBox" name="checkbox_savelog">
           <property name="minimumSize">
            <size>
-            <width>90</width>
+            <width>100</width>
             <height>23</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>90</width>
+            <width>100</width>
             <height>23</height>
            </size>
           </property>
@@ -372,7 +372,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>65</width>
             <height>23</height>
            </size>
           </property>
@@ -641,13 +641,13 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>107</width>
+                <width>120</width>
                 <height>21</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>107</width>
+                <width>120</width>
                 <height>21</height>
                </size>
               </property>
