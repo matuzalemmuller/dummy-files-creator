@@ -3,14 +3,14 @@ import configparser
 from pathlib import Path
 from setuptools import setup
 
-with open("PyPi_description.md", "r", encoding="utf-8") as fh:
+with open("doc/PyPi_description.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 CURRENT_DIR = Path(__file__).parent
 sys.path.insert(0, str(CURRENT_DIR))
 
 config = configparser.ConfigParser()
-config.read(CURRENT_DIR / "package.ini")
+config.read(f"{CURRENT_DIR}/package.ini")
 
 setup(
     name="dummyfilescreator",

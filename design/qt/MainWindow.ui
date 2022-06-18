@@ -178,7 +178,7 @@
          <widget class="QCheckBox" name="checkbox_verbose">
           <property name="minimumSize">
            <size>
-            <width>70</width>
+            <width>75</width>
             <height>23</height>
            </size>
           </property>
@@ -213,7 +213,7 @@
          <widget class="QLabel" name="label_chunk_size">
           <property name="minimumSize">
            <size>
-            <width>65</width>
+            <width>75</width>
             <height>23</height>
            </size>
           </property>
@@ -251,7 +251,7 @@
          <widget class="QComboBox" name="combo_chunk_unit">
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>65</width>
             <height>23</height>
            </size>
           </property>
@@ -366,7 +366,7 @@
          <widget class="QComboBox" name="combo_file_unit">
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>65</width>
             <height>23</height>
            </size>
           </property>

@@ -45,7 +45,7 @@ class FilesCreator(threading.Thread):  # pylint: disable=too-many-instance-attri
         update_function=None,
         error_function=None,
     ):
-        """Save parameters to internal atributes and computes how many chunks should be created per file.""" # pylint: disable=line-too-long
+        """Save parameters to internal atributes and computes how many chunks should be created per file."""  # pylint: disable=line-too-long
         super().__init__()
         self.folder_path = folder_path
         self.number_files = number_files

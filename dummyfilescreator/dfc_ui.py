@@ -28,7 +28,7 @@ from . import qt_icon  # pylint: disable=unused-import
 class About(QDialog):
     """Displays About window."""
 
-    __slots__ = ("about_window")
+    __slots__ = "about_window"
 
     def __init__(self):
         """Import Qt resource for icon and display the QDialog."""
