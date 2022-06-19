@@ -4,6 +4,8 @@ License: GPLv3
 """
 import argparse
 import sys
+import threading
+import time
 from tqdm import tqdm
 from .files_creator import FilesCreator
 
@@ -12,19 +14,20 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
     """Class that provides CLI support."""
 
     __slots__ = (
-        "folder_path",
-        "number_files",
-        "size_file",
-        "size_unit",
-        "chunk_size",
-        "chunk_unit",
-        "verbose",
-        "progressbar",
-        "log_path",
-        "log_hash",
-        "pbar_total",
-        "pbar_file",
-        "files_creator",
+        "__folder_path",
+        "__number_files",
+        "__size_file",
+        "__size_unit",
+        "__chunk_size",
+        "__chunk_unit",
+        "__verbose",
+        "__progressbar",
+        "__log_path",
+        "__log_hash",
+        "__pbar_total",
+        "__pbar_file",
+        "__files_creator",
+        "__update_thread",
     )
 
     def __init__(self):  # pylint: disable=too-many-branches
@@ -81,12 +84,12 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
         )
         args = vars(parser.parse_args())
 
-        self.folder_path = f"{args['output']}"
-        self.number_files = int(args["n_files"])
-        self.size_file = int(args["size"])
+        self.__folder_path = f"{args['output']}"
+        self.__number_files = int(args["n_files"])
+        self.__size_file = int(args["size"])
 
         if args["unit"] == "KiB" or args["unit"] == "MiB" or args["unit"] == "GiB":
-            self.size_unit = f"{args['unit']}"
+            self.__size_unit = f"{args['unit']}"
         else:
             print(
                 "Error: Acceptable values for --file-unit/-fu are 'KiB', 'MiB', and 'GiB'"
@@ -99,119 +102,111 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
                 or args["chunk_unit"] == "MiB"
                 or args["chunk_unit"] == "GiB"
             ):
-                self.chunk_size = int(args["chunk_size"])
-                self.chunk_unit = f"{args['chunk_unit']}"
+                self.__chunk_size = int(args["chunk_size"])
+                self.__chunk_unit = f"{args['chunk_unit']}"
             else:
                 print(
                     "Error: Acceptable values for --chunk-unit/-cu are 'KiB', 'MiB', and 'GiB'"
                 )
                 sys.exit(1)
         else:
-            self.chunk_size = 1024
-            self.chunk_unit = "KiB"
+            self.__chunk_size = 1024
+            self.__chunk_unit = "KiB"
 
         if args["verbose"] is not None:
-            self.verbose = bool(args["verbose"])
+            self.__verbose = bool(args["verbose"])
         else:
-            self.verbose = None
+            self.__verbose = None
 
         if args["progressbar"] is not None:
-            self.progressbar = bool(args["progressbar"])
+            self.__progressbar = bool(args["progressbar"])
         else:
-            self.progressbar = None
+            self.__progressbar = None
 
         if args["log"] is not None:
-            self.log_path = f"{args['log']}"
+            self.__log_path = f"{args['log']}"
         else:
-            self.log_path = None
+            self.__log_path = None
 
         if args["hash"] is not None:
-            self.log_hash = bool(args["hash"])
+            self.__log_hash = bool(args["hash"])
         else:
-            self.log_hash = None
+            self.__log_hash = None
 
-        self.files_creator = None
-        self.pbar_total = None
-        self.pbar_file = None
-
-    def print_progress(
-        self,
-        n_created: int,
-        file_name: str,
-        chunk_n: int,
-    ):
-        """Update progress bars while files are created."""
-        self.pbar_total.n = n_created
-        self.pbar_total.refresh()
-        if self.verbose:
-            self.pbar_file.n = chunk_n
-            self.pbar_file.set_description(f"{file_name}")
-            self.pbar_file.refresh()
+        self.__files_creator = None
+        self.__pbar_total = None
+        self.__pbar_file = None
+        self.__update_thread = None
 
     def error_function(self, error_message: str):
         """Display message when an error happens during file creation."""
-        if self.pbar_total is not None:
-            self.pbar_total.close()
-        if self.pbar_file is not None:
-            self.pbar_file.close()
+        if self.__pbar_total is not None:
+            self.__pbar_total.close()
+        if self.__pbar_file is not None:
+            self.__pbar_file.close()
         print("\r" + error_message)
         sys.exit(1)
 
-    def complete_function(self):
-        """Show completion message when all files are created."""
-        if self.pbar_total is not None:
-            self.pbar_total.close()
-        if self.pbar_file is not None:
-            self.pbar_file.close()
-        print(f"\r{self.number_files} file(s) created in {self.folder_path}")
-        if self.log_path is not None:
-            print(f"Log file saved to {self.log_path}")
+    def __update_cli_progress(self):
+        while self.__files_creator.is_alive():
+            self.__pbar_total.n = self.__files_creator.n_created - 1
+            self.__pbar_total.refresh()
+            if self.__verbose:
+                self.__pbar_file.n = self.__files_creator.chunk_n
+                self.__pbar_file.set_description(f"{self.__files_creator.file_name}")
+                self.__pbar_file.refresh()
+            time.sleep(0.1)
+        self.__pbar_total.close()
+        if self.__pbar_file is not None:
+            self.__pbar_file.close()
+        print(f"\r{self.__number_files} file(s) created in {self.__folder_path}")
+        if self.__log_path is not None:
+            print(f"Log file saved to {self.__log_path}")
 
     def run(self):
         """Start the file creation process."""
         try:
-            if self.progressbar or self.verbose:
-                self.files_creator = FilesCreator(
-                    folder_path=self.folder_path,
-                    number_files=self.number_files,
-                    size_file=self.size_file,
-                    size_unit=self.size_unit,
-                    chunk_size=self.chunk_size,
-                    chunk_unit=self.chunk_unit,
-                    verbose=self.verbose,
-                    log_path=self.log_path,
-                    log_hash=self.log_hash,
-                    update_function=self.print_progress,
+            if self.__progressbar or self.__verbose:
+                self.__files_creator = FilesCreator(
+                    folder_path=self.__folder_path,
+                    number_files=self.__number_files,
+                    size_file=self.__size_file,
+                    size_unit=self.__size_unit,
+                    chunk_size=self.__chunk_size,
+                    chunk_unit=self.__chunk_unit,
+                    log_path=self.__log_path,
+                    log_hash=self.__log_hash,
                     error_function=self.error_function,
-                    complete_function=self.complete_function,
                 )
 
-                self.pbar_total = tqdm(
-                    range(self.number_files), unit=" files", leave=False
+                self.__pbar_total = tqdm(
+                    range(self.__number_files), unit=" files", leave=False
                 )
-                if self.verbose:
-                    self.pbar_file = tqdm(
-                        range(self.files_creator.number_of_chunks),
+                if self.__verbose:
+                    self.__pbar_file = tqdm(
+                        range(self.__files_creator.number_of_chunks),
                         unit=" chunks",
                         leave=False,
                     )
             else:
-                self.files_creator = FilesCreator(
-                    folder_path=self.folder_path,
-                    number_files=self.number_files,
-                    size_file=self.size_file,
-                    size_unit=self.size_unit,
-                    chunk_size=self.chunk_size,
-                    chunk_unit=self.chunk_unit,
-                    verbose=self.verbose,
-                    log_path=self.log_path,
-                    log_hash=self.log_hash,
-                    update_function=None,
+                self.__files_creator = FilesCreator(
+                    folder_path=self.__folder_path,
+                    number_files=self.__number_files,
+                    size_file=self.__size_file,
+                    size_unit=self.__size_unit,
+                    chunk_size=self.__chunk_size,
+                    chunk_unit=self.__chunk_unit,
+                    log_path=self.__log_path,
+                    log_hash=self.__log_hash,
                     error_function=self.error_function,
-                    complete_function=self.complete_function,
                 )
 
-            self.files_creator.start()
+            self.__files_creator.start()
+            if self.__progressbar or self.__verbose:
+                self.__update_thread = threading.Thread(
+                    target=self.__update_cli_progress
+                )
+                self.__update_thread.start()
         except IOError as error:
             print(f"CLI: Error starting FilesCreator thread: {error}")
             sys.exit(1)
