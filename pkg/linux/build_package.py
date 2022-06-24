@@ -60,6 +60,7 @@ def is_program_installed(program_name: str):
     if shutil.which(program_name):
         print(f"{program_name} is installed")
         return True
+    print(f"{program_name} not installed")
 
     return False
 

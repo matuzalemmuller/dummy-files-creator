@@ -1,6 +1,6 @@
 # Dummy Files Creator
 
-![Unit tests](https://github.com/matuzalemmuller/dummy-files-creator/actions/workflows/unit-tests.yml/badge.svg)
+![Unit tests](https://github.com/matuzalemmuller/dummy-files-creator/actions/workflows/unit-tests.yml/badge.svg) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/cadec3608d3540b8b9b80fb0daec1b14)](https://www.codacy.com/gh/matuzalemmuller/dummy-files-creator/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=matuzalemmuller/dummy-files-creator&amp;utm_campaign=Badge_Grade)
 
 Application to generate dummy files with random content and different checksums. **File units are corresponding powers of 2<sup>10</sup> [(KiB, MiB, GiB)](https://en.wikipedia.org/wiki/Orders_of_magnitude_(data))**.
 
@@ -48,7 +48,7 @@ Download the latest executable from the [releases page](https://github.com/matuz
 
 ### macOS
 
-Download the latest `.dmg` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
+Download the latest `.app` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
 *   Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
