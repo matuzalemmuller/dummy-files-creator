@@ -4,7 +4,7 @@
 
 Application to generate dummy files with random content and different checksums. **File units are corresponding powers of 2<sup>10</sup> [(KiB, MiB, GiB)](https://en.wikipedia.org/wiki/Orders_of_magnitude_(data))**.
 
-For a bash-based (more performatic) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
+For a bash-based (more performant) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
 
 ## Usage
 

@@ -6,7 +6,7 @@ Application to generate dummy files with random content and different checksums.
 
 See the project in [GitHub](https://github.com/matuzalemmuller/dummy-files-creator) and [PyPi](https://pypi.org/project/dummyfilescreator/).
 
-For a bash-based (more performatic) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
+For a bash-based (more performant) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
 
 ## Installation
 
