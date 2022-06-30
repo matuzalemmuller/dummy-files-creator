@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Author: Matuzalem (Mat) Muller.
 
 License: GPLv3
@@ -84,7 +85,13 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
         )
         args = vars(parser.parse_args())
 
-        self.__folder_path = f"{args['output']}"
+        output = f"{args['output']}"
+        if output[-1] == "/":
+            output = output[:-1]
+        elif output[-1] == "\\":
+            output = output[:-1]
+        self.__folder_path = output
+
         self.__number_files = int(args["n_files"])
         self.__size_file = int(args["size"])
 
@@ -124,7 +131,12 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
             self.__progressbar = None
 
         if args["log"] is not None:
-            self.__log_path = f"{args['log']}"
+            log = f"{args['log']}"
+            if log[-1] == "/":
+                log = log[:-1]
+            elif log[-1] == "\\":
+                log = log[:-1]
+            self.__log_path = log
         else:
             self.__log_path = None
 
@@ -210,3 +222,11 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
         except IOError as error:
             print(f"CLI: Error starting FilesCreator thread: {error}")
             sys.exit(1)
+
+def main():
+    """Entrypoint in case this file is executed directly."""
+    app = DFCCli()
+    app.run()
+
+if __name__ == "__main__":
+    main()

@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 """Author: Matuzalem (Mat) Muller.
 
 License: GPLv3
@@ -250,13 +250,25 @@ class DFCUi(QMainWindow):
         if self.__main_window.button_create_stop.text() == "Create":
             size_file = int(self.__main_window.text_size_files.text())
             chunk_size = int(self.__main_window.text_chunk_size.text())
+            if self.__main_window.text_path.text()[-1] == "/":
+                path = self.__main_window.text_path.text()[:-1]
+            elif self.__main_window.text_path.text()[-1] == "\\":
+                path = self.__main_window.text_path.text()[:-1]
+            else:
+                path = self.__main_window.text_path.text()
             if self.__main_window.checkbox_savelog.isChecked():
-                log_path = self.__main_window.text_logfilepath.text()
+                if self.__main_window.text_logfilepath.text()[-1] == "/":
+                    log_path = self.__main_window.text_logfilepath.text()[:-1]
+                elif self.__main_window.text_logfilepath.text()[-1] == "\\":
+                    log_path = self.__main_window.text_logfilepath.text()[:-1]
+                else:
+                    log_path = self.__main_window.text_logfilepath.text()
             else:
                 log_path = None
             try:
+                print(log_path)
                 self.__creator_thread = FilesCreator(
-                    folder_path=self.__main_window.text_path.text(),
+                    folder_path=path,
                     number_files=int(self.__main_window.text_n_files.text()),
                     size_file=size_file,
                     size_unit=self.__main_window.combo_file_unit.currentText(),
