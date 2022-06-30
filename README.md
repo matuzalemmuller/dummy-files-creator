@@ -39,8 +39,8 @@ python3 dummyfilescreator.py
 
 Download the latest executable from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
-*   The build tagged as `dir` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
-*   The build tagged as `one-file` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
+*   The build tagged as `windows-dir-x86_64` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
+*   The build tagged as `windows-one-file-x86_64` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
 
 ### Linux
 
@@ -48,7 +48,7 @@ Download the latest executable from the [releases page](https://github.com/matuz
 
 ### macOS
 
-Download the latest `.app` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
+Download the latest `.app.zip` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
 
 *   Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
