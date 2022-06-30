@@ -1,18 +1,20 @@
-# masOS
-.DS_Store
-
 # Python
 __pycache__
 
 # virtualenv
-env
-
-# Pyinstaller generated directories
-build
-dist
-
-# VSCode
-.vscode
+/env
+/venv
 
 # Local releases
-release
+*egg-info
+/build
+/dist
+/pkg/linux/build
+/pkg/linux/dist
+/pkg/linux/package
+/pkg/linux/logs
+/pkg/linux/dummyfilescreator.deb
+/pkg/linux/dummyfilescreator.rpm
+
+# Local notes
+TODO.md

@@ -1,11 +1,8 @@
 # -*- mode: python -*-
 block_cipher = None
-a = Analysis(['../src/dummy_files_creator.py'],
-             pathex=['src'],
+a = Analysis(['../../dummyfilescreator.py'],
+             pathex=[],
              binaries=[],
-             datas=[
-                    ('../icon/icon.png','icon')
-                   ],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -35,12 +32,12 @@ coll = COLLECT(exe,
                name='dummy-files-creator-darwin')
 app = BUNDLE(coll,
              name='Dummy Files Creator.app',
-             icon='../icon/icon.icns',
+             icon='../../design/icon/icon.icns',
              info_plist={
                 'LSBackgroundOnly': 'False',
                 'NSHighResolutionCapable': 'True',
                 'CFBundleDisplayName': 'Dummy Files Creator',
-                'CFBundleShortVersionString': '1.2.0',
-                'NSHumanReadableCopyright': '2019, Mat Muller'
+                'CFBundleShortVersionString': '3.0.0',
+                'NSHumanReadableCopyright': '2022, Mat Muller'
              },
              )

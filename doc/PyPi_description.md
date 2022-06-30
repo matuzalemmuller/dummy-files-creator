@@ -4,53 +4,7 @@
 
 Application to generate dummy files with random content and different checksums. **File units are corresponding powers of 2<sup>10</sup> [(KiB, MiB, GiB)](https://en.wikipedia.org/wiki/Orders_of_magnitude_(data))**.
 
-See the project in [GitHub](https://github.com/matuzalemmuller/dummy-files-creator) and [PyPi](https://pypi.org/project/dummyfilescreator/).
-
 For a bash-based (more performant) solution, see [this project](https://github.com/matuzalemmuller/test-files-creator).
-
-## Installation
-
-Pre-compiled packages are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-### Cross-platform (recommended)
-
-Install via pip:
-
-```sh
-pip3 install dummyfilescreator
-```
-
-or, install as a local package:
-
-```sh
-git clone https://github.com/matuzalemmuller/dummy-files-creator
-python3 setup.py install
-```
-
-or, don't install, and just run as a regular python program:
-
-```sh
-git clone https://github.com/matuzalemmuller/dummy-files-creator
-pip3 install -r requirements.txt
-python3 dummyfilescreator.py
-```
-
-### Windows
-
-Download the latest executable from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-*   The build tagged as `windows-dir-x86_64` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
-*   The build tagged as `windows-one-file-x86_64` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
-
-### Linux
-
-`.deb` and `.rpm` packages are available in the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-### macOS
-
-Download the latest `.app.zip` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-*   Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
 ## Usage
 
@@ -60,7 +14,7 @@ Both GUI and CLI modes are available. Note that CLI mode is recommended for crea
 
 To use the GUI mode, start `dummyfilescreator` without arguments. This mode is **not** recommended for creating large datasets.
 
-![Dummy Files Creator](./doc/screenshot.png)
+![Dummy Files Creator](https://raw.githubusercontent.com/matuzalemmuller/dummy-files-creator/master/doc/screenshot.png)
 
 ### CLI mode
 
@@ -81,9 +35,9 @@ Recommended for creating large datasets. The parameters for CLI mode are listed 
 
 Example:
 
-*   Create 5 files of 80 MiB each, show the individual file creation progress (verbose output), and save the log file with md5 hash to /tmp.
+*   Create 5 files of 80 MiB each, show the individual file creation progress, and save the log file with md5 hash to /tmp.
 
-[![Recording](./doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
+[![Recording](https://raw.githubusercontent.com/matuzalemmuller/dummy-files-creator/master/doc/recording.gif)](https://asciinema.org/a/WN5s9E54sgA0Ftxp0IDA1Zxq3)
 
 ```sh
 $ dummyfilescreator -o=/tmp -n=5 -fs=80 -fu=MiB -cs=1 -cu=MiB -l=/tmp -ha -v
