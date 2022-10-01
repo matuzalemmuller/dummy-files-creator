@@ -10,7 +10,7 @@ For a bash-based (more performant) solution, see [this project](https://github.c
 
 ## Installation
 
-Pre-compiled packages are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
+Pre-compiled packages for Windows are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases). Linux and macOS packages have been discontinued for now.
 
 ### Cross-platform (recommended)
 
@@ -41,16 +41,6 @@ Download the latest executable from the [releases page](https://github.com/matuz
 
 *   The build tagged as `windows-dir-x86_64` has a directory with multiple files, one being `dummyfilescreator.exe`, and is faster to start.
 *   The build tagged as `windows-one-file-x86_64` has a single executable [but it takes longer to start](https://pyinstaller.org/en/stable/operating-mode.html#bundling-to-one-file).
-
-### Linux
-
-`.deb` and `.rpm` packages are available in the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-### macOS
-
-Download the latest `.app.zip` file from the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases).
-
-*   Currently, there are no `arm`-compatible packages due to the lack of devices to build the app. Contributions are welcome.
 
 ## Usage
 
