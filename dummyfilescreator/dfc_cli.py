@@ -41,10 +41,14 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
             "--output", "-o", required=True, help="Location where files will be created"
         )
         parser.add_argument(
-            "--n-files", "-n", required=True, help="Number of files to be created"
+            "--n-files",
+            "-n",
+            required=True,
+            type=int,
+            help="Number of files to be created",
         )
         parser.add_argument(
-            "--size", "-fs", required=True, help="Size of files to be created"
+            "--size", "-fs", required=True, type=int, help="Size of files to be created"
         )
         parser.add_argument(
             "--unit",
@@ -52,7 +56,9 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
             required=True,
             help="Size unit. Accepted values: KiB, MiB, GiB",
         )
-        parser.add_argument("--chunk-size", "-cs", required=False, help="Chunk size")
+        parser.add_argument(
+            "--chunk-size", "-cs", required=False, type=int, help="Chunk size"
+        )
         parser.add_argument(
             "--chunk-unit",
             "-cu",
@@ -92,8 +98,13 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
             output = output[:-1]
         self.__folder_path = output
 
-        self.__number_files = int(args["n_files"])
-        self.__size_file = int(args["size"])
+        if args["n_files"] <= 0:
+            parser.error("argument --n_files/-n must be greater than 0")
+        self.__number_files = args["n_files"]
+
+        if args["size"] <= 0:
+            parser.error("argument --size/-fs must be greater than 0")
+        self.__size_file = args["size"]
 
         if args["unit"] == "KiB" or args["unit"] == "MiB" or args["unit"] == "GiB":
             self.__size_unit = f"{args['unit']}"
@@ -109,7 +120,9 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
                 or args["chunk_unit"] == "MiB"
                 or args["chunk_unit"] == "GiB"
             ):
-                self.__chunk_size = int(args["chunk_size"])
+                if args["chunk_size"] <= 0:
+                    parser.error("argument --chunk-size/-cs must be greater than 0")
+                self.__chunk_size = args["chunk_size"]
                 self.__chunk_unit = f"{args['chunk_unit']}"
             else:
                 print(
@@ -178,19 +191,18 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
     def run(self):
         """Start the file creation process."""
         try:
+            self.__files_creator = FilesCreator(
+                folder_path=self.__folder_path,
+                number_files=self.__number_files,
+                size_file=self.__size_file,
+                size_unit=self.__size_unit,
+                chunk_size=self.__chunk_size,
+                chunk_unit=self.__chunk_unit,
+                log_path=self.__log_path,
+                log_hash=self.__log_hash,
+                error_function=self.error_function,
+            )
             if self.__progressbar or self.__verbose:
-                self.__files_creator = FilesCreator(
-                    folder_path=self.__folder_path,
-                    number_files=self.__number_files,
-                    size_file=self.__size_file,
-                    size_unit=self.__size_unit,
-                    chunk_size=self.__chunk_size,
-                    chunk_unit=self.__chunk_unit,
-                    log_path=self.__log_path,
-                    log_hash=self.__log_hash,
-                    error_function=self.error_function,
-                )
-
                 self.__pbar_total = tqdm(
                     range(self.__number_files), unit=" files", leave=False
                 )
@@ -200,19 +212,6 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
                         unit=" chunks",
                         leave=False,
                     )
-            else:
-                self.__files_creator = FilesCreator(
-                    folder_path=self.__folder_path,
-                    number_files=self.__number_files,
-                    size_file=self.__size_file,
-                    size_unit=self.__size_unit,
-                    chunk_size=self.__chunk_size,
-                    chunk_unit=self.__chunk_unit,
-                    log_path=self.__log_path,
-                    log_hash=self.__log_hash,
-                    error_function=self.error_function,
-                )
-
             self.__files_creator.start()
             if self.__progressbar or self.__verbose:
                 self.__update_thread = threading.Thread(
@@ -223,10 +222,12 @@ class DFCCli:  # pylint: disable=too-many-instance-attributes
             print(f"CLI: Error starting FilesCreator thread: {error}")
             sys.exit(1)
 
+
 def main():
     """Entrypoint in case this file is executed directly."""
     app = DFCCli()
     app.run()
+
 
 if __name__ == "__main__":
     main()

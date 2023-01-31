@@ -10,7 +10,7 @@ For a bash-based (more performant) solution, see [this project](https://github.c
 
 ## Installation
 
-Pre-compiled packages for Windows are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases). Linux and macOS packages have been discontinued for now.
+Pre-compiled packages for Windows are available on the [releases page](https://github.com/matuzalemmuller/dummy-files-creator/releases). Linux and macOS packages may be supported in the future, depending on demand.
 
 ### Cross-platform (recommended)
 
